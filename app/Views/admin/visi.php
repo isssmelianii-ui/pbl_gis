@@ -1,256 +1,177 @@
-<?= $this->include('layouts/header_admin'); ?>
-<?= $this->include('layouts/sidebar_admin'); ?>
+<?= $this->extend('layouts/admin_layout') ?>
 
-<div class="main-content">
-
-    <div class="page-header">
-
-        <div>
-
-            <h1>Visi & Misi Sekolah</h1>
-
-            <p>Lengkapi visi dan misi sekolah yang akan ditampilkan kepada masyarakat.</p>
-
-        </div>
-
-    </div>
-
-    <?php if(session()->getFlashdata('success')) : ?>
-
-        <div class="alert-success">
-
-            <?= session()->getFlashdata('success'); ?>
-
-        </div>
-
-    <?php endif; ?>
-
-    <form action="<?= base_url('admin/update-visi'); ?>" method="post">
-
-        <div class="card">
-
-            <div class="section-title">
-
-                <i class="fa-solid fa-eye"></i>
-
-                <span>Visi Sekolah</span>
-
-            </div>
-
-            <textarea
-                name="visi"
-                id="visi"
-                rows="6"
-                placeholder="Masukkan visi sekolah..."><?= $sekolah['visi']; ?></textarea>
-
-            <div class="counter">
-
-                <span id="visiCount">0</span> karakter
-
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <div class="section-title">
-
-                <i class="fa-solid fa-bullseye"></i>
-
-                <span>Misi Sekolah</span>
-
-            </div>
-
-            <textarea
-                name="misi"
-                id="misi"
-                rows="12"
-                placeholder="Masukkan misi sekolah..."><?= $sekolah['misi']; ?></textarea>
-
-            <div class="counter">
-
-                <span id="misiCount">0</span> karakter
-
-            </div>
-
-        </div>
-
-        <button class="btn-save">
-
-            <i class="fa-solid fa-floppy-disk"></i>
-
-            Simpan Visi & Misi
-
-        </button>
-
-    </form>
-
-</div>
+<?= $this->section('content') ?>
 
 <style>
-
-.card{
-
-background:white;
-
-padding:30px;
-
-border-radius:22px;
-
-margin-bottom:25px;
-
-box-shadow:0 8px 25px rgba(0,0,0,.05);
-
-}
-
-.section-title{
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
-
-margin-bottom:20px;
-
-font-size:20px;
-
-font-weight:600;
-
-color:#1e293b;
-
-}
-
-.section-title i{
-
-width:45px;
-
-height:45px;
-
-background:#2563eb;
-
-color:white;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-border-radius:12px;
-
-}
-
-textarea{
-
-width:100%;
-
-padding:18px;
-
-border-radius:16px;
-
-border:1px solid #dbeafe;
-
-font-size:15px;
-
-resize:vertical;
-
-outline:none;
-
-transition:.3s;
-
-}
-
-textarea:focus{
-
-border-color:#2563eb;
-
-box-shadow:0 0 0 4px rgba(37,99,235,.08);
-
-}
-
-.counter{
-
-margin-top:10px;
-
-text-align:right;
-
-color:#64748b;
-
-font-size:13px;
-
-}
-
-.btn-save{
-
-background:#2563eb;
-
-color:white;
-
-border:none;
-
-padding:16px 35px;
-
-border-radius:15px;
-
-font-size:15px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.btn-save:hover{
-
-background:#1d4ed8;
-
-transform:translateY(-2px);
-
-}
-
-.alert-success{
-
-background:#dcfce7;
-
-padding:16px;
-
-border-radius:15px;
-
-margin-bottom:25px;
-
-color:#166534;
-
-}
-
+    .card-custom {
+        background: white;
+        padding: 28px 30px;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f1f5f9;
+    }
+
+    .card-custom h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .card-custom .subtitle {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #374151;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        background: #fafbfc;
+    }
+
+    .form-control-custom:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        background: #fff;
+    }
+
+    textarea.form-control-custom {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .char-count {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .btn-save {
+        background: var(--primary);
+        color: white;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(26, 86, 219, 0.25);
+    }
+
+    .btn-save:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(26, 86, 219, 0.3);
+    }
+
+    .btn-save i {
+        font-size: 18px;
+    }
+
+    .alert-success {
+        background: #dcfce7;
+        padding: 15px 20px;
+        border-radius: 12px;
+        color: #166534;
+        margin-bottom: 20px;
+        border-left: 4px solid #22c55e;
+    }
+
+    @media (max-width: 576px) {
+        .card-custom { padding: 18px 16px; }
+        .btn-save { width: 100%; justify-content: center; }
+    }
 </style>
 
+<!-- ============================================
+PAGE HEADER
+============================================ -->
+<div class="mb-4">
+    <h4 class="fw-bold" style="color: #111827; font-size: 18px;">
+        <i class="bi bi-eye text-primary me-2"></i>
+        Visi & Misi Sekolah
+    </h4>
+    <p class="text-muted" style="font-size: 13px;">Lengkap visi dan misi sekolah yang akan ditampilkan kepada masyarakat.</p>
+</div>
+
+<!-- ============================================
+FLASH MESSAGE
+============================================ -->
+<?php if(session()->getFlashdata('success')) : ?>
+    <div class="alert-success">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <?= session()->getFlashdata('success'); ?>
+    </div>
+<?php endif; ?>
+
+<!-- ============================================
+FORM
+============================================ -->
+<div class="card-custom">
+    <form action="<?= base_url('admin/update-visi'); ?>" method="post">
+        <?= csrf_field() ?>
+
+        <!-- Visi -->
+        <div class="form-group">
+            <label for="visi">Visi Sekolah</label>
+            <textarea class="form-control-custom" id="visi" name="visi" rows="4" 
+                      placeholder="Masukkan visi sekolah..." 
+                      oninput="updateCharCount('visi', 'visiCount')"><?= old('visi', $sekolah['visi'] ?? '') ?></textarea>
+            <span class="char-count" id="visiCount">0 karakter</span>
+        </div>
+
+        <!-- Misi -->
+        <div class="form-group">
+            <label for="misi">Misi Sekolah</label>
+            <textarea class="form-control-custom" id="misi" name="misi" rows="4" 
+                      placeholder="Masukkan misi sekolah..." 
+                      oninput="updateCharCount('misi', 'misiCount')"><?= old('misi', $sekolah['misi'] ?? '') ?></textarea>
+            <span class="char-count" id="misiCount">0 karakter</span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-save">
+            <i class="bi bi-save"></i> Simpan Visi & Misi
+        </button>
+    </form>
+</div>
+
 <script>
+    function updateCharCount(textareaId, counterId) {
+        const textarea = document.getElementById(textareaId);
+        const counter = document.getElementById(counterId);
+        if (textarea && counter) {
+            counter.textContent = textarea.value.length + ' karakter';
+        }
+    }
 
-const visi=document.getElementById('visi');
-
-const misi=document.getElementById('misi');
-
-const visiCount=document.getElementById('visiCount');
-
-const misiCount=document.getElementById('misiCount');
-
-function updateCounter(){
-
-visiCount.innerHTML=visi.value.length;
-
-misiCount.innerHTML=misi.value.length;
-
-}
-
-updateCounter();
-
-visi.addEventListener('keyup',updateCounter);
-
-misi.addEventListener('keyup',updateCounter);
-
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCharCount('visi', 'visiCount');
+        updateCharCount('misi', 'misiCount');
+    });
 </script>
 
-<?= $this->include('layouts/footer_admin'); ?>
+<?= $this->endSection() ?>

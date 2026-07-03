@@ -17,7 +17,7 @@
                 <span class="badge badge-status"><?= ($sekolah['status_sekolah'] ?? 'Negeri') == 'Negeri' ? 'Sekolah Negeri' : 'Sekolah Swasta'; ?></span>
                 <span class="badge badge-akreditasi">Terakreditasi <?= $sekolah['akreditasi'] ?? '-'; ?></span>
             </div>
-            <h1 class="school-title"><?= $sekolah['nama_sekolah'] ?: 'Nama Sekolah'; ?></h1>
+            <h1 class="school-title"><?= $sekolah['name_sekolah'] ?: 'Name Sekolah'; ?></h1>
             <p class="school-subtitle">
                 Pengaturan Profil <span class="separator">•</span> NPSN: <?= $sekolah['npsn'] ?: '-'; ?> <span class="separator">•</span> Wilayah Kec. <?= $sekolah['kecamatan'] ?: '-'; ?>
             </p>
@@ -42,7 +42,7 @@
                 
                 <div class="form-group">
                     <label>Nama Sekolah</label>
-                    <input type="text" name="nama_sekolah" value="<?= $sekolah['nama_sekolah']; ?>" placeholder="Masukkan nama sekolah">
+                    <input type="text" name="name_sekolah" value="<?= $sekolah['name_sekolah']; ?>" placeholder="Masukkan nama sekolah">
                 </div>
 
                 <div class="form-group">

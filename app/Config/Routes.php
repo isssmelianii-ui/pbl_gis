@@ -14,6 +14,11 @@ $routes->get('/data-sekolah', 'Home::dataSekolah');
 $routes->get('/detail-peta', 'Home::detailPeta');
 $routes->get('/sekolah/(:num)', 'Home::detailPeta/$1');
 
+// ============================================
+// PUBLIC WEBSITE - FULL LAYAR
+// ============================================
+$routes->get('/public-website', 'PublicWebsite::index');
+
 /*
 |--------------------------------------------------------------------------
 | AUTH
@@ -25,11 +30,18 @@ $routes->get('/logout', 'Auth::logout');
 
 /*
 |--------------------------------------------------------------------------
+| LANDING PAGE (Setelah Login)
+|--------------------------------------------------------------------------
+*/
+$routes->get('/landing', 'Landing::index');
+$routes->post('/landing/processLanding', 'Landing::processLanding');
+
+/*
+|--------------------------------------------------------------------------
 | SUPER ADMIN
 |--------------------------------------------------------------------------
 */
 $routes->group('superadmin', function ($routes) {
-
     $routes->get('dashboard', 'SuperAdmin::dashboard');
     $routes->get('peta', 'PetaSekolah::index');
 
@@ -48,16 +60,11 @@ $routes->group('superadmin', function ($routes) {
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN / OPERATOR (INI YANG KAMU PAKAI SEKARANG)
+| ADMIN / OPERATOR
 |--------------------------------------------------------------------------
 */
 $routes->group('admin', function ($routes) {
-    /*
-    |--------------------------
-    | DASHBOARD & DATA
-    |--------------------------
-    */
-     $routes->get('dashboard', 'Admin::dashboard');
+    $routes->get('dashboard', 'Admin::dashboard');
     $routes->get('data-sekolah', 'Admin::dataSekolah');
 
     $routes->get('detail-sekolah/(:num)', 'Admin::detailSekolah/$1');
@@ -65,42 +72,19 @@ $routes->group('admin', function ($routes) {
 
     $routes->get('peta', 'Admin::peta');
 
-    /*
-    |--------------------------
-    | PROFIL SEKOLAH (OPERATOR)
-    |--------------------------
-    */
     $routes->get('profil', 'Admin::profil');
     $routes->post('update-profil', 'Admin::updateProfil');
 
-    /*
-    |--------------------------
-    | VISI MISI
-    |--------------------------
-    */
     $routes->get('visi', 'Admin::visi');
     $routes->post('update-visi', 'Admin::updateVisi');
 
-    /*
-    |--------------------------
-    | KEPALA SEKOLAH
-    |--------------------------
-    */
     $routes->get('kepala', 'Admin::kepala');
     $routes->post('update-kepala', 'Admin::updateKepala');
 
-    /*
-    |--------------------------
-    | LOKASI
-    |--------------------------
-    */
     $routes->get('lokasi', 'Admin::lokasi');
     $routes->post('update-lokasi', 'Admin::updateLokasi');
 
-    /*
-    |--------------------------
-    | PREVIEW
-    |--------------------------
-    */
     $routes->get('preview', 'Admin::preview');
+    // Public Website - Full Layar
+$routes->get('/public-website', 'PublicWebsite::index');
 });

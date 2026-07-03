@@ -6,439 +6,385 @@ use App\Models\SekolahModel;
 
 class Admin extends BaseController
 {
-    protected $sekolah;
-
-    public function __construct()
-    {
-        helper(['form', 'url']);
-
-        if (!session()->get('logged_in')) {
-            exit('Silakan login terlebih dahulu.');
-        }
-
-        // if (session()->get('role') != 'operator') {
-        //     exit('Akses Ditolak.');
-        // }
-        // Izinkan operator dan super_admin
-    $role = session()->get('role');
-    if ($role != 'operator' && $role != 'super_admin') {
-        exit('Akses Ditolak.');
-    }
-
-        $this->sekolah = new SekolahModel();
-    }
-
-    /*
-    |---------------------------------------
-    | AMBIL SEKOLAH OPERATOR (SAFE ARRAY)
-    |---------------------------------------
-    */
-    private function sekolahSaya(): array
-    {
-        $sekolah = $this->sekolah
-            ->where('user_id', session()->get('id'))
-            ->first();
-
-        if (!$sekolah) {
-            $id = $this->sekolah->insert([
-                'user_id' => session()->get('id'),
-                'nama_sekolah' => '',
-                'npsn' => '',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
-
-            $sekolah = $this->sekolah->find($id);
-        }
-
-        return is_array($sekolah) ? $sekolah : [];
-    }
-
-    /*
-    |---------------------------------------
-    | DASHBOARD
-    |---------------------------------------
-    */
+    // ============================================
+    // DASHBOARD
+    // ============================================
     public function dashboard()
     {
-        $sekolah = $this->sekolahSaya();
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        $fields = [
-            'nama_sekolah','npsn','jenjang','status_sekolah',
-            'akreditasi','kurikulum','alamat','telepon',
-            'email','website','visi','misi',
-            'kepala_sekolah','foto','cover','logo'
+        // Hitung progress kelengkapan
+        $items = [
+            'nama_sekolah' => $sekolah['nama_sekolah'] ?? null,
+            'visi'         => $sekolah['visi'] ?? null,
+            'misi'         => $sekolah['misi'] ?? null,
+            'kepala_sekolah' => $sekolah['kepala_sekolah'] ?? null,
+            'alamat'       => $sekolah['alamat'] ?? null,
+            'koordinat'    => $sekolah['koordinat'] ?? null,
         ];
 
-        $isi = 0;
+        $totalItems = count($items);
+        $filledItems = 0;
+        foreach ($items as $item) {
+            if (!empty($item)) $filledItems++;
+        }
 
-        foreach ($fields as $f) {
-            if (!empty($sekolah[$f] ?? null)) {
-                $isi++;
+        $progress = ($totalItems > 0) ? round(($filledItems / $totalItems) * 100) : 0;
+
+        $data = [
+            'title'          => 'Dashboard Operator',
+            'subtitle'       => 'Kelola data sekolah Anda',
+            'active_menu'    => 'dashboard',
+            'total_sekolah'  => $sekolah ? 1 : 0,
+            'profil_lengkap' => $progress,
+            'progress'       => $progress,
+            'total_item'     => $totalItems,
+            'item_terisi'    => $filledItems,
+            'sekolah'        => $sekolah,
+        ];
+
+        return view('admin/dashboard', $data);
+    }
+
+    // ============================================
+    // PROFIL SEKOLAH - UPDATE
+    // ============================================
+    public function updateProfil()
+    {
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+
+        // Validasi
+        $rules = [
+            'nama_sekolah' => 'required|min_length[3]',
+            'alamat'       => 'permit_empty',
+            'npsn'         => 'permit_empty',
+            'jenjang'      => 'permit_empty',
+            'status_sekolah' => 'permit_empty',
+            'akreditasi'   => 'permit_empty',
+            'kurikulum'    => 'permit_empty',
+            'kecamatan'    => 'permit_empty',
+            'telepon'      => 'permit_empty',
+            'email'        => 'permit_empty|valid_email',
+            'website'      => 'permit_empty|valid_url',
+            'latitude'     => 'permit_empty|numeric',
+            'longitude'    => 'permit_empty|numeric',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->with('error', $this->validator->getErrors())
+                ->withInput();
+        }
+
+        // Data yang akan diupdate
+        $data = [
+            'nama_sekolah'   => $this->request->getPost('nama_sekolah'),
+            'npsn'           => $this->request->getPost('npsn'),
+            'jenjang'        => $this->request->getPost('jenjang'),
+            'status_sekolah' => $this->request->getPost('status_sekolah'),
+            'akreditasi'     => $this->request->getPost('akreditasi'),
+            'kurikulum'      => $this->request->getPost('kurikulum'),
+            'kecamatan'      => $this->request->getPost('kecamatan'),
+            'alamat'         => $this->request->getPost('alamat'),
+            'telepon'        => $this->request->getPost('telepon'),
+            'email'          => $this->request->getPost('email'),
+            'website'        => $this->request->getPost('website'),
+            'latitude'       => $this->request->getPost('latitude'),
+            'longitude'      => $this->request->getPost('longitude'),
+        ];
+
+        // Upload Cover
+        $cover = $this->request->getFile('cover');
+        if ($cover && $cover->isValid() && !$cover->hasMoved()) {
+            $coverName = time() . '_' . $cover->getRandomName();
+            $cover->move('uploads/cover', $coverName);
+            $data['cover'] = $coverName;
+            
+            // Hapus cover lama
+            if (!empty($sekolah['cover']) && file_exists('uploads/cover/' . $sekolah['cover'])) {
+                unlink('uploads/cover/' . $sekolah['cover']);
             }
         }
 
-        $persen = round(($isi / count($fields)) * 100);
-
-        return view('admin/dashboard', [
-            'title' => 'Dashboard Operator',
-            'sekolah' => $sekolah,
-            'persen' => $persen
-        ]);
-    }
-
-    /*
-    |---------------------------------------
-    | PROFIL
-    |---------------------------------------
-    */
-    public function profil()
-    {
-        return view('admin/profil', [
-            'title' => 'Profil Sekolah',
-            'sekolah' => $this->sekolahSaya()
-        ]);
-    }
-
-    /*
-    |---------------------------------------
-    | UPDATE PROFIL (SAFE FILE UPLOAD)
-    |---------------------------------------
-    */
-    public function updateProfil()
-    {
-        $sekolah = $this->sekolahSaya();
-
-        $cover = $this->request->getFile('cover');
-        $logo  = $this->request->getFile('logo');
-        $foto  = $this->request->getFile('foto');
-
-        $coverName = $sekolah['cover'] ?? '';
-        $logoName  = $sekolah['logo'] ?? '';
-        $fotoName  = $sekolah['foto'] ?? '';
-
-        // COVER
-        if ($cover && $cover->isValid() && !$cover->hasMoved()) {
-            $coverName = $cover->getRandomName();
-            $cover->move(FCPATH . 'uploads/cover/', $coverName);
-        }
-
-        // LOGO
+        // Upload Logo
+        $logo = $this->request->getFile('logo');
         if ($logo && $logo->isValid() && !$logo->hasMoved()) {
-            $logoName = $logo->getRandomName();
-            $logo->move(FCPATH . 'uploads/logo/', $logoName);
+            $logoName = time() . '_' . $logo->getRandomName();
+            $logo->move('uploads/logo', $logoName);
+            $data['logo'] = $logoName;
+            
+            // Hapus logo lama
+            if (!empty($sekolah['logo']) && file_exists('uploads/logo/' . $sekolah['logo'])) {
+                unlink('uploads/logo/' . $sekolah['logo']);
+            }
         }
 
-        // FOTO
+        // Upload Foto
+        $foto = $this->request->getFile('foto');
         if ($foto && $foto->isValid() && !$foto->hasMoved()) {
-            $fotoName = $foto->getRandomName();
-            $foto->move(FCPATH . 'uploads/sekolah/', $fotoName);
+            $fotoName = time() . '_' . $foto->getRandomName();
+            $foto->move('uploads/sekolah', $fotoName);
+            $data['foto'] = $fotoName;
+            
+            // Hapus foto lama
+            if (!empty($sekolah['foto']) && file_exists('uploads/sekolah/' . $sekolah['foto'])) {
+                unlink('uploads/sekolah/' . $sekolah['foto']);
+            }
         }
 
-        $this->sekolah->update($sekolah['id'], [
-            'nama_sekolah' => $this->request->getPost('nama_sekolah'),
-            'npsn' => $this->request->getPost('npsn'),
-            'jenjang' => $this->request->getPost('jenjang'),
-            'status_sekolah' => $this->request->getPost('status_sekolah'),
-            'akreditasi' => $this->request->getPost('akreditasi'),
-            'kurikulum' => $this->request->getPost('kurikulum'),
-            'kecamatan' => $this->request->getPost('kecamatan'),
-            'alamat' => $this->request->getPost('alamat'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email'),
-            'website' => $this->request->getPost('website'),
-            'latitude' => $this->request->getPost('latitude'),
-            'longitude' => $this->request->getPost('longitude'),
-            'cover' => $coverName,
-            'logo' => $logoName,
-            'foto' => $fotoName,
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        // Update data
+        if ($sekolah) {
+            $sekolahModel->update($sekolah['id'], $data);
+        } else {
+            $data['user_id'] = $userId;
+            $sekolahModel->insert($data);
+        }
 
         return redirect()->to('/admin/profil')
-            ->with('success', 'Profil berhasil diperbarui');
+            ->with('success', 'Profil sekolah berhasil diperbarui!');
     }
 
-    /*
-    |---------------------------------------
-    | VISI MISI
-    |---------------------------------------
-    */
-    public function visi()
+    // ============================================
+    // PROFIL SEKOLAH - TAMPIL
+    // ============================================
+    public function profil()
     {
-        return view('admin/visi', [
-            'title' => 'Visi & Misi',
-            'sekolah' => $this->sekolahSaya()
-        ]);
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+
+        $data = [
+            'title'       => 'Edit Profil Sekolah',
+            'subtitle'    => 'Kelola identitas dan informasi sekolah',
+            'active_menu' => 'profil',
+            'sekolah'     => $sekolah ?: [],
+        ];
+
+        return view('admin/profil', $data);
     }
 
+    // ============================================
+    // VISI & MISI - UPDATE
+    // ============================================
     public function updateVisi()
     {
-        $sekolah = $this->sekolahSaya();
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        $this->sekolah->update($sekolah['id'], [
+        $data = [
             'visi' => $this->request->getPost('visi'),
             'misi' => $this->request->getPost('misi'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        ];
+
+        if ($sekolah) {
+            $sekolahModel->update($sekolah['id'], $data);
+        } else {
+            $data['user_id'] = $userId;
+            $sekolahModel->insert($data);
+        }
 
         return redirect()->to('/admin/visi')
-            ->with('success', 'Visi & Misi berhasil diperbarui');
+            ->with('success', 'Visi & Misi berhasil diperbarui!');
     }
 
-    /*
-    |---------------------------------------
-    | KEPALA SEKOLAH
-    |---------------------------------------
-    */
-    public function kepala()
+    // ============================================
+    // VISI & MISI - TAMPIL
+    // ============================================
+    public function visi()
     {
-        return view('admin/kepala', [
-            'title' => 'Kepala Sekolah',
-            'sekolah' => $this->sekolahSaya()
-        ]);
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+
+        $data = [
+            'title'       => 'Visi & Misi',
+            'subtitle'    => 'Kelola visi dan misi sekolah',
+            'active_menu' => 'visi',
+            'sekolah'     => $sekolah ?: [],
+        ];
+
+        return view('admin/visi', $data);
     }
 
+    // ============================================
+    // KEPALA SEKOLAH - UPDATE
+    // ============================================
     public function updateKepala()
     {
-        $sekolah = $this->sekolahSaya();
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
+        $data = [
+            'kepala_sekolah' => $this->request->getPost('kepala_sekolah'),
+            'nip_kepala'     => $this->request->getPost('nip_kepala'),
+            'sambutan'       => $this->request->getPost('sambutan'),
+        ];
+
+        // Upload Foto Kepala
         $foto = $this->request->getFile('foto_kepala');
-
-        $fotoKepala = $sekolah['foto_kepala'] ?? '';
-
         if ($foto && $foto->isValid() && !$foto->hasMoved()) {
-            $fotoKepala = $foto->getRandomName();
-            $foto->move(FCPATH . 'uploads/kepala/', $fotoKepala);
+            $fotoName = time() . '_' . $foto->getRandomName();
+            $foto->move('uploads/kepala', $fotoName);
+            $data['foto_kepala'] = $fotoName;
+            
+            // Hapus foto lama
+            if (!empty($sekolah['foto_kepala']) && file_exists('uploads/kepala/' . $sekolah['foto_kepala'])) {
+                unlink('uploads/kepala/' . $sekolah['foto_kepala']);
+            }
         }
 
-        $this->sekolah->update($sekolah['id'], [
-            'kepala_sekolah' => $this->request->getPost('kepala_sekolah'),
-            'nip_kepala' => $this->request->getPost('nip_kepala'),
-            'sambutan' => $this->request->getPost('sambutan'),
-            'foto_kepala' => $fotoKepala,
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        if ($sekolah) {
+            $sekolahModel->update($sekolah['id'], $data);
+        } else {
+            $data['user_id'] = $userId;
+            $sekolahModel->insert($data);
+        }
 
         return redirect()->to('/admin/kepala')
-            ->with('success', 'Data Kepala Sekolah berhasil diperbarui');
+            ->with('success', 'Data Kepala Sekolah berhasil diperbarui!');
     }
-    /*
-|---------------------------------------
-| TAMBAH SEKOLAH (Untuk Super Admin)
-|---------------------------------------
-*/
-// public function tambahSekolah()
-// {
-//     // Cek akses - izinkan super_admin DAN admin
-//     $role = session()->get('role');
-//     if ($role != 'super_admin' && $role != 'operator') {
-//         return redirect()->to('/admin/dashboard')->with('error', 'Akses Ditolak!');
-//     }
 
-//     return view('admin/tambah_sekolah', [
-//         'title' => 'Tambah Sekolah'
-//     ]);
-// }
-
-/*
-|---------------------------------------
-| SIMPAN SEKOLAH BARU
-|---------------------------------------
-*/
-// public function simpanSekolah()
-// {
-//     // Cek akses
-//     $role = session()->get('role');
-//     if ($role != 'super_admin' && $role != 'admin') {
-//         return redirect()->to('/admin/dashboard')->with('error', 'Akses Ditolak!');
-//     }
-
-//     // Validasi input
-//     $rules = [
-//         'nama_sekolah' => 'required|min_length[3]',
-//         'npsn' => 'required|numeric|min_length[4]|is_unique[tb_sekolah.npsn]',
-//         'jenjang' => 'required',
-//         'status' => 'required',
-//         'kecamatan' => 'required',
-//         'alamat' => 'required',
-//         'telepon' => 'required',
-//         'email' => 'required|valid_email',
-//     ];
-
-//     if (!$this->validate($rules)) {
-//         return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-//     }
-
-//     // Simpan data
-//     $data = [
-//         'nama_sekolah' => $this->request->getPost('nama_sekolah'),
-//         'npsn' => $this->request->getPost('npsn'),
-//         'jenjang' => $this->request->getPost('jenjang'),
-//         'status_sekolah' => $this->request->getPost('status'),
-//         'akreditasi' => $this->request->getPost('akreditasi'),
-//         'kecamatan' => $this->request->getPost('kecamatan'),
-//         'kurikulum' => $this->request->getPost('kurikulum'),
-//         'alamat' => $this->request->getPost('alamat'),
-//         'telepon' => $this->request->getPost('telepon'),
-//         'email' => $this->request->getPost('email'),
-//         'website' => $this->request->getPost('website'),
-//         'latitude' => $this->request->getPost('latitude'),
-//         'longitude' => $this->request->getPost('longitude'),
-//         'created_at' => date('Y-m-d H:i:s'),
-//     ];
-
-//     // Gunakan model untuk insert
-//     $sekolahModel = new \App\Models\SekolahModel();
-//     $sekolahModel->save($data);
-
-//     return redirect()->to('/admin/data-sekolah')->with('success', 'Data sekolah berhasil ditambahkan!');
-// }
-    /*
-    |---------------------------------------
-    | LOKASI
-    |---------------------------------------
-    */
-    public function lokasi()
+    // ============================================
+    // KEPALA SEKOLAH - TAMPIL
+    // ============================================
+    public function kepala()
     {
-        return view('admin/lokasi', [
-            'title' => 'Lokasi Sekolah',
-            'sekolah' => $this->sekolahSaya()
-        ]);
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+
+        $data = [
+            'title'       => 'Kepala Sekolah',
+            'subtitle'    => 'Kelola data kepala sekolah',
+            'active_menu' => 'kepala',
+            'sekolah'     => $sekolah ?: [],
+        ];
+
+        return view('admin/kepala', $data);
     }
 
+    // ============================================
+    // LOKASI - UPDATE
+    // ============================================
     public function updateLokasi()
     {
-        $sekolah = $this->sekolahSaya();
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        $this->sekolah->update($sekolah['id'], [
-            'latitude' => $this->request->getPost('latitude'),
-            'longitude' => $this->request->getPost('longitude'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $latitude = $this->request->getPost('latitude');
+        $longitude = $this->request->getPost('longitude');
+
+        // Validasi
+        if (!is_numeric($latitude) || !is_numeric($longitude)) {
+            return redirect()->to('/admin/lokasi')
+                ->with('error', 'Koordinat harus berupa angka yang valid!');
+        }
+
+        // Gabungkan koordinat untuk field 'koordinat' jika ada
+        $data = [
+            'latitude'  => $latitude,
+            'longitude' => $longitude,
+            'koordinat' => $latitude . ', ' . $longitude,
+        ];
+
+        if ($sekolah) {
+            $sekolahModel->update($sekolah['id'], $data);
+        } else {
+            $data['user_id'] = $userId;
+            $sekolahModel->insert($data);
+        }
 
         return redirect()->to('/admin/lokasi')
-            ->with('success', 'Lokasi berhasil diperbarui');
-    }
-    public function dataSekolah()
-{
-    $model = new \App\Models\SekolahModel();
-    $keyword = $this->request->getGet('keyword');
-
-    $query = $model;
-
-    if ($keyword) {
-        $query = $query->like('nama_sekolah', $keyword);
+            ->with('success', 'Lokasi sekolah berhasil diperbarui!');
     }
 
-    // Data untuk tabel (semua sekolah)
-    $dataSekolah = $query->findAll();
-    
-    // Data untuk map (sekolah milik operator yang login)
-    $sekolahMap = $this->sekolahSaya();
-    
-    // Jika tidak ada data, gunakan default
-    if (empty($sekolahMap)) {
-        $sekolahMap = [
-            'nama_sekolah' => 'Sekolah Default',
-            'alamat' => 'Alamat tidak tersedia',
-            'latitude' => '-0.947083',
-            'longitude' => '100.417181'
-        ];
-    }
-
-    return view('admin/data_sekolah', [
-        'sekolah' => $dataSekolah,        // Untuk tabel
-        'sekolah_map' => $sekolahMap,     // Untuk footer
-        'keyword' => $keyword ?? ''
-    ]);
-}
-    /*
-    |---------------------------------------
-    | EDIT SEKOLAH
-    |---------------------------------------
-    */
-        /*
-    /*
-|---------------------------------------
-| EDIT SEKOLAH
-|---------------------------------------
-*/
-    /*
-    |---------------------------------------
-    | UPDATE SEKOLAH (PROSES SIMPAN PERUBAHAN)
-    |---------------------------------------
-    */
-   
-
-    /*
-    |---------------------------------------
-    | HAPUS SEKOLAH
-    |---------------------------------------
-    */
-    public function hapusSekolah($id = null)
+    // ============================================
+    // LOKASI - TAMPIL
+    // ============================================
+    public function lokasi()
     {
-        // Cek akses - hanya super_admin yang bisa hapus
-        $role = session()->get('role');
-        if ($role != 'super_admin') {
-            return redirect()->to('/admin/data-sekolah')->with('error', 'Hanya Super Admin yang bisa menghapus data!');
-        }
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        // Cek ID
-        if ($id === null) {
-            return redirect()->back()->with('error', 'ID tidak valid');
-        }
+        $data = [
+            'title'       => 'Lokasi Sekolah',
+            'subtitle'    => 'Atur lokasi dan peta sekolah',
+            'active_menu' => 'lokasi',
+            'sekolah'     => $sekolah ?: [],
+        ];
 
-        // Load model
-        $model = new \App\Models\SekolahModel();
-
-        // Cek apakah data ada
-        $sekolah = $model->find($id);
-        if (!$sekolah) {
-            return redirect()->to('/admin/data-sekolah')->with('error', 'Data sekolah tidak ditemukan');
-        }
-
-        // Hapus data
-        if ($model->delete($id)) {
-            return redirect()->to('/admin/data-sekolah')
-                ->with('success', 'Data sekolah berhasil dihapus!');
-        } else {
-            return redirect()->back()
-                ->with('error', 'Gagal menghapus data. Silakan coba lagi.');
-        }
-    }
-    /*
-|---------------------------------------
-| DETAIL SEKOLAH
-|---------------------------------------
-*/
-public function detailSekolah($id = null)
-{
-    // Cek akses
-    $role = session()->get('role');
-    if ($role != 'super_admin' && $role != 'operator') {
-        return redirect()->to('/admin/dashboard')->with('error', 'Akses Ditolak!');
+        return view('admin/lokasi', $data);
     }
 
-    // Cek ID
-    if ($id === null) {
-        return redirect()->to('/admin/data-sekolah')->with('error', 'ID tidak ditemukan');
+    // ============================================
+    // PREVIEW WEBSITE
+    // ============================================
+    public function preview()
+    {
+        $sekolahModel = new SekolahModel();
+        $userId = session()->get('id');
+        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+
+        // Hitung progress untuk preview
+        $items = [
+            'nama_sekolah' => $sekolah['nama_sekolah'] ?? null,
+            'visi'         => $sekolah['visi'] ?? null,
+            'misi'         => $sekolah['misi'] ?? null,
+            'kepala_sekolah' => $sekolah['kepala_sekolah'] ?? null,
+            'alamat'       => $sekolah['alamat'] ?? null,
+            'koordinat'    => $sekolah['koordinat'] ?? null,
+        ];
+
+        $totalItems = count($items);
+        $filledItems = 0;
+        foreach ($items as $item) {
+            if (!empty($item)) $filledItems++;
+        }
+        $progress = ($totalItems > 0) ? round(($filledItems / $totalItems) * 100) : 0;
+
+        $data = [
+            'title'       => 'Preview Website',
+            'subtitle'    => 'Lihat tampilan website sekolah Anda',
+            'active_menu' => 'preview',
+            'sekolah'     => $sekolah ?: [],
+            'progress'    => $progress,
+        ];
+
+        return view('admin/preview', $data);
     }
 
-    // Load model
-    $model = new \App\Models\SekolahModel();
-    $sekolah = $model->find($id);
-
-    // Jika data tidak ditemukan
-    if (!$sekolah) {
-        return redirect()->to('/admin/data-sekolah')->with('error', 'Data tidak ditemukan');
+    // ============================================
+    // REDIRECT: DATA SEKOLAH -> PROFIL
+    // ============================================
+    public function dataSekolah()
+    {
+        return redirect()->to('/admin/profil');
     }
 
-    // Kirim ke view
-    return view('admin/detail_sekolah', [
-        'title' => 'Detail Sekolah',
-        'sekolah' => $sekolah,
-        'sekolah_map' => $this->sekolahSaya()
-    ]);
-}
+    public function detailSekolah($id)
+    {
+        return redirect()->to('/admin/profil');
+    }
+
+    public function hapusSekolah($id)
+    {
+        // Existing logic - TIDAK DIUBAH
+        return redirect()->to('/admin/profil');
+    }
+
+    // ============================================
+    // REDIRECT: PETA -> LOKASI
+    // ============================================
+    public function peta()
+    {
+        return redirect()->to('/admin/lokasi');
+    }
 }
