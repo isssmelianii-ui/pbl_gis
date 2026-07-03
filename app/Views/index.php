@@ -519,7 +519,7 @@
         <div class="hero-text">
 
             <div class="hero-badge">
-                SISTEM INFORMASI GEOGRAFIS
+                SISTEM INFORMASI TANAH DATAR
             </div>
 
             <h1>
