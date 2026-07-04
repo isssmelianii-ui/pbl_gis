@@ -27,8 +27,6 @@
             background:#f5f7fb;
         }
 
-        /* NAVBAR */
-
         .navbar{
             width:100%;
             height:75px;
@@ -56,15 +54,11 @@
             font-weight:600;
         }
 
-        /* CONTAINER */
-
         .container{
             width:90%;
             margin:auto;
             padding:45px 0;
         }
-
-        /* HEADER */
 
         .page-header{
             margin-bottom:40px;
@@ -82,8 +76,6 @@
             line-height:1.8;
             font-size:15px;
         }
-
-        /* CARD */
 
         .stats-grid{
             display:grid;
@@ -139,55 +131,6 @@
             font-size:14px;
         }
 
-        /* FILTER */
-
-        .filter-section{
-            background:white;
-            border:1px solid #e5e7eb;
-            border-radius:24px;
-            padding:22px;
-            margin-bottom:30px;
-            display:flex;
-            gap:18px;
-            flex-wrap:wrap;
-            align-items:center;
-        }
-
-        .search-box{
-            flex:1;
-            min-width:300px;
-            position:relative;
-        }
-
-        .search-box i{
-            position:absolute;
-            left:18px;
-            top:50%;
-            transform:translateY(-50%);
-            color:#94a3b8;
-        }
-
-        .search-box input{
-            width:100%;
-            padding:16px 18px 16px 50px;
-            border-radius:16px;
-            border:1px solid #e5e7eb;
-            outline:none;
-            font-size:14px;
-        }
-
-        .filter-select{
-            padding:16px;
-            border-radius:16px;
-            border:1px solid #e5e7eb;
-            outline:none;
-            color:#334155;
-            font-size:14px;
-            min-width:180px;
-        }
-
-        /* TABLE */
-
         .table-card{
             background:white;
             border-radius:24px;
@@ -236,8 +179,6 @@
             color:#64748b;
         }
 
-        /* BADGE */
-
         .badge{
             padding:6px 14px;
             border-radius:30px;
@@ -258,14 +199,10 @@
             background:#f97316;
         }
 
-        /* STATUS */
-
         .status{
             color:#16a34a;
             font-weight:600;
         }
-
-        /* AKSI */
 
         .aksi-group{
             display:flex;
@@ -290,53 +227,6 @@
             color:white;
         }
 
-        /* PAGINATION */
-
-        .pagination{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:22px;
-            font-size:14px;
-            color:#64748b;
-        }
-
-        .page-number{
-            display:flex;
-            align-items:center;
-            gap:10px;
-        }
-
-        .page-btn{
-            width:38px;
-            height:38px;
-            border-radius:12px;
-            background:white;
-            border:1px solid #e5e7eb;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            cursor:pointer;
-        }
-
-        .page-btn.active{
-            background:#2563eb;
-            color:white;
-            border:none;
-        }
-
-        /* FOOTER */
-
-        .footer{
-            margin-top:80px;
-            padding:25px 0;
-            border-top:1px solid #e5e7eb;
-            display:flex;
-            justify-content:space-between;
-            color:#64748b;
-            font-size:13px;
-        }
-
         @media(max-width:1100px){
 
             .stats-grid{
@@ -349,14 +239,6 @@
 
             .stats-grid{
                 grid-template-columns:1fr;
-            }
-
-            .filter-section{
-                flex-direction:column;
-            }
-
-            .filter-select{
-                width:100%;
             }
 
         }
@@ -398,7 +280,7 @@
             </h1>
 
             <p>
-                Akses data sekolah lengkap satuan pendidikan tingkat SD dan SMP di seluruh wilayah administrasi. Data diperbarui secara berkala berdasarkan sistem terintegrasi spasial terbaru.
+                Akses data sekolah lengkap satuan pendidikan tingkat SD dan SMP di seluruh wilayah administrasi.
             </p>
 
         </div>
@@ -425,15 +307,9 @@
 
                 </div>
 
-                <h2>
+                <h2><?= $totalSekolah; ?></h2>
 
-                    <?= $totalSekolah; ?>
-
-                </h2>
-
-                <p>
-                    Institusi Pendidikan
-                </p>
+                <p>Institusi Pendidikan</p>
 
             </div>
 
@@ -449,15 +325,9 @@
 
                 </div>
 
-                <h2>
+                <h2><?= $totalSD; ?></h2>
 
-                    <?= $totalSD; ?>
-
-                </h2>
-
-                <p>
-                    Sekolah Dasar (SD)
-                </p>
+                <p>Sekolah Dasar (SD)</p>
 
             </div>
 
@@ -473,15 +343,9 @@
 
                 </div>
 
-                <h2>
+                <h2><?= $totalSMP; ?></h2>
 
-                    <?= $totalSMP; ?>
-
-                </h2>
-
-                <p>
-                    Sekolah Menengah Pertama
-                </p>
+                <p>Sekolah Menengah Pertama</p>
 
             </div>
 
@@ -497,72 +361,11 @@
 
                 </div>
 
-                <h2>
+                <h2><?= $totalTK; ?></h2>
 
-                    <?= $totalTK; ?>
-
-                </h2>
-
-                <p>
-                    Taman Kanak-Kanak (TK)
-                </p>
+                <p>Taman Kanak-Kanak (TK)</p>
 
             </div>
-
-        </div>
-
-        <!-- FILTER -->
-
-        <div class="filter-section">
-
-            <div class="search-box">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input type="text"
-                placeholder="Cari nama sekolah atau NPSN...">
-
-            </div>
-
-            <select class="filter-select">
-
-                <option>
-                    Semua Jenjang
-                </option>
-
-                <option>
-                    TK
-                </option>
-
-                <option>
-                    SD
-                </option>
-
-                <option>
-                    SMP
-                </option>
-
-            </select>
-
-            <select class="filter-select">
-
-                <option>
-                    Semua Kecamatan
-                </option>
-
-                <option>
-                    Lintau Buo
-                </option>
-
-                <option>
-                    Padang Ganting
-                </option>
-
-                <option>
-                    Tanjung Emas
-                </option>
-
-            </select>
 
         </div>
 
@@ -576,29 +379,12 @@
 
                     <tr>
 
-                        <th>
-                            NAMA SEKOLAH
-                        </th>
-
-                        <th>
-                            NPSN
-                        </th>
-
-                        <th>
-                            KECAMATAN
-                        </th>
-
-                        <th>
-                            JENJANG
-                        </th>
-
-                        <th>
-                            STATUS
-                        </th>
-
-                        <th>
-                            AKSI
-                        </th>
+                        <th>NAMA SEKOLAH</th>
+                        <th>NPSN</th>
+                        <th>KECAMATAN</th>
+                        <th>JENJANG</th>
+                        <th>STATUS</th>
+                        <th>AKSI</th>
 
                     </tr>
 
@@ -640,17 +426,9 @@
 
                         </td>
 
-                        <td>
+                        <td><?= $s['npsn']; ?></td>
 
-                            <?= $s['npsn']; ?>
-
-                        </td>
-
-                        <td>
-
-                            <?= $s['kecamatan']; ?>
-
-                        </td>
+                        <td><?= $s['kecamatan']; ?></td>
 
                         <td>
 
@@ -676,14 +454,18 @@
 
                             <div class="aksi-group">
 
-                                <a href="#"
+                                <!-- DETAIL SEKOLAH -->
+
+                                <a href="<?= base_url('detail-sekolah/'.$s['id']); ?>"
                                 class="aksi-btn">
 
                                     <i class="fa-solid fa-eye"></i>
 
                                 </a>
 
-                                <a href="#"
+                                <!-- DETAIL PETA -->
+
+                                <a href="<?= base_url('detail-peta?id='.$s['id']); ?>"
                                 class="aksi-btn">
 
                                     <i class="fa-solid fa-map-location-dot"></i>
@@ -701,71 +483,6 @@
                 </tbody>
 
             </table>
-
-            <!-- PAGINATION -->
-
-            <div class="pagination">
-
-                <div>
-
-                    Menampilkan 1 - 5 dari
-                    <?= $totalSekolah; ?> sekolah
-
-                </div>
-
-                <div class="page-number">
-
-                    <div class="page-btn">
-
-                        <i class="fa-solid fa-chevron-left"></i>
-
-                    </div>
-
-                    <div class="page-btn active">
-
-                        1
-
-                    </div>
-
-                    <div class="page-btn">
-
-                        2
-
-                    </div>
-
-                    <div class="page-btn">
-
-                        3
-
-                    </div>
-
-                    <div class="page-btn">
-
-                        <i class="fa-solid fa-chevron-right"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- FOOTER -->
-
-        <div class="footer">
-
-            <div>
-
-                © 2026 School GIS System
-
-            </div>
-
-            <div>
-
-                Precision Spatial Logic
-
-            </div>
 
         </div>
 

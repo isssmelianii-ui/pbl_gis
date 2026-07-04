@@ -3,19 +3,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peta Publik Sekolah</title>
 
-    <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Peta Publik Sekolah
+    </title>
+
+    <!-- LEAFLET -->
+
+    <link rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
     <style>
+
         *{
             margin:0;
             padding:0;
             box-sizing:border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family:'Segoe UI',sans-serif;
         }
 
         body{
@@ -35,6 +44,7 @@
         }
 
         /* TOPBAR */
+
         .topbar{
             position:absolute;
             top:20px;
@@ -71,6 +81,7 @@
         }
 
         /* SIDEBAR */
+
         .sidebar{
             position:absolute;
             top:90px;
@@ -161,12 +172,15 @@
         }
 
     </style>
+
 </head>
+
 <body>
 
 <div class="map-wrapper">
 
     <!-- TOPBAR -->
+
     <div class="topbar">
 
         <div class="logo-box">
@@ -180,29 +194,48 @@
     </div>
 
     <!-- SIDEBAR -->
+
     <div class="sidebar">
 
         <h3>Peta Persebaran Sekolah</h3>
 
         <div class="search-box">
-            <input type="text" placeholder="Cari sekolah...">
+
+            <input type="text"
+            placeholder="Cari sekolah...">
+
         </div>
 
         <div class="filter-box">
 
             <div class="filter-item">
-                <input type="checkbox" checked>
+
+                <input type="checkbox"
+                id="tkCheckbox"
+                checked>
+
                 <label>TK</label>
+
             </div>
 
             <div class="filter-item">
-                <input type="checkbox" checked>
+
+                <input type="checkbox"
+                id="sdCheckbox"
+                checked>
+
                 <label>SD</label>
+
             </div>
 
             <div class="filter-item">
-                <input type="checkbox" checked>
+
+                <input type="checkbox"
+                id="smpCheckbox"
+                checked>
+
                 <label>SMP</label>
+
             </div>
 
         </div>
@@ -210,8 +243,11 @@
         <div class="stats-box">
 
             <div class="stats-item">
+
                 <small>Total Sekolah</small>
+
                 <h2><?= count($sekolah); ?></h2>
+
             </div>
 
         </div>
@@ -219,34 +255,50 @@
     </div>
 
     <!-- MAP -->
+
     <div id="map"></div>
 
 </div>
 
 <!-- LEAFLET -->
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
 
-    // INIT MAP
-    var map = L.map('map').setView([-0.947083, 100.417181], 11);
+    // AMBIL ID SEKOLAH
+    const selectedId = "<?= $_GET['id'] ?? ''; ?>";
 
-    // TILE
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    // INIT MAP
+    var map = L.map('map').setView(
+        [-0.947083, 100.417181],
+        11
+    );
+
+    // TILE MAP
+    L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            attribution:'&copy; OpenStreetMap'
+        }
+    ).addTo(map);
+
+    // ARRAY MARKER
+    let markers = [];
 
     // DATA SEKOLAH
     <?php foreach($sekolah as $s) : ?>
 
         <?php if(!empty($s['latitude']) && !empty($s['longitude'])) : ?>
 
-            var marker = L.marker([
+            var marker<?= $s['id']; ?> = L.marker([
                 <?= $s['latitude']; ?>,
                 <?= $s['longitude']; ?>
-            ]).addTo(map);
+            ]);
 
-            marker.bindPopup(`
+            // POPUP
+            marker<?= $s['id']; ?>.bindPopup(`
+
                 <div class="popup-title">
                     <?= $s['nama_sekolah']; ?>
                 </div>
@@ -266,11 +318,76 @@
                 <div class="popup-info">
                     <b>Akreditasi:</b> <?= $s['akreditasi']; ?>
                 </div>
+
             `);
+
+            // MASUKKAN KE ARRAY
+            markers.push({
+                marker: marker<?= $s['id']; ?>,
+                jenjang: "<?= $s['jenjang']; ?>"
+            });
+
+            // TAMPILKAN MARKER
+            marker<?= $s['id']; ?>.addTo(map);
+
+            // AUTO FOKUS
+            if(selectedId == "<?= $s['id']; ?>"){
+
+                map.setView([
+                    <?= $s['latitude']; ?>,
+                    <?= $s['longitude']; ?>
+                ], 15);
+
+                marker<?= $s['id']; ?>.openPopup();
+
+            }
 
         <?php endif; ?>
 
     <?php endforeach; ?>
+
+    // CHECKBOX
+    const tkCheckbox = document.getElementById('tkCheckbox');
+    const sdCheckbox = document.getElementById('sdCheckbox');
+    const smpCheckbox = document.getElementById('smpCheckbox');
+
+    // FILTER MARKER
+    function filterMarkers(){
+
+        markers.forEach(item => {
+
+            let show = false;
+
+            if(item.jenjang == 'TK' && tkCheckbox.checked){
+                show = true;
+            }
+
+            if(item.jenjang == 'SD' && sdCheckbox.checked){
+                show = true;
+            }
+
+            if(item.jenjang == 'SMP' && smpCheckbox.checked){
+                show = true;
+            }
+
+            if(show){
+
+                item.marker.addTo(map);
+
+            }else{
+
+                map.removeLayer(item.marker);
+
+            }
+
+        });
+
+    }
+
+    // EVENT CHECKBOX
+    tkCheckbox.addEventListener('change', filterMarkers);
+    sdCheckbox.addEventListener('change', filterMarkers);
+    smpCheckbox.addEventListener('change', filterMarkers);
 
 </script>
 

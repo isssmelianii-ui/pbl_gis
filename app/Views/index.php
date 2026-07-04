@@ -532,24 +532,49 @@
                 Sistem informasi geografis untuk visualisasi persebaran sekolah secara realtime dan modern.
             </p>
 
-            <!-- SEARCH -->
+<!-- SEARCH -->
 
-            <div class="search-box">
+<form action="<?= base_url('/'); ?>" method="GET" class="search-box">
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass"></i>
 
-                <input type="text"
-                placeholder="Cari sekolah atau wilayah...">
+    <input 
+        type="text"
+        name="keyword"
+        placeholder="Cari sekolah atau wilayah..."
+        value="<?= $_GET['keyword'] ?? ''; ?>"
+    >
 
-                <button class="search-btn">
-                    Cari
-                </button>
+    <button type="submit" class="search-btn">
+        Cari
+    </button>
 
-            </div>
+</form>
+
+<!-- PESAN ERROR -->
+
+<?php if(session()->getFlashdata('error')) : ?>
+
+    <div style="
+        margin-top:15px;
+        background:#fee2e2;
+        color:#dc2626;
+        padding:12px 16px;
+        border-radius:12px;
+        font-size:14px;
+        width:100%;
+        max-width:500px;
+    ">
+
+        <?= session()->getFlashdata('error'); ?>
+
+    </div>
+
+<?php endif; ?>
 
             <!-- TAG -->
 
-            <div class="hero-tags">
+            <!-- <div class="hero-tags">
 
                 <span>Lintau Buo</span>
 
@@ -557,7 +582,7 @@
 
                 <span>Tanjung Emas</span>
 
-            </div>
+            </div> -->
 
         </div>
 
@@ -1130,8 +1155,7 @@ id="about">
 
                 <?php if($s['website'] != ''): ?>
 
-                    <a href="<?= $s['website']; ?>"
-                    target="_blank"
+                    <a href="<?= base_url('detail-sekolah/'.$s['id']); ?>"
                     style="
                         display:block;
                         margin-top:12px;

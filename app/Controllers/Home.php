@@ -6,16 +6,63 @@ use App\Models\SekolahModel;
 
 class Home extends BaseController
 {
+
+    /*
+    |--------------------------------------------------------------------------
+    | LANDING PAGE
+    |--------------------------------------------------------------------------
+    */
+
 public function index()
 {
     $model = new SekolahModel();
 
+    $keyword = $this->request->getGet('keyword');
+
+    // JIKA ADA PENCARIAN
+    if ($keyword) {
+
+        $sekolah = $model
+
+            ->like('nama_sekolah', $keyword)
+
+            ->orLike('kecamatan', $keyword)
+
+            ->first();
+
+        // JIKA DATA DITEMUKAN
+        if ($sekolah) {
+
+            return redirect()->to(
+                base_url('detail-sekolah/' . $sekolah['id'])
+            );
+        }
+
+        // JIKA TIDAK DITEMUKAN
+        session()->setFlashdata(
+            'error',
+            'Sekolah tidak ditemukan'
+        );
+    }
+
     $data = [
-        'sekolah'     => $model->findAll(),
-        'totalSekolah'=> $model->countAll(),
-        'totalTK'     => $model->where('jenjang','TK')->countAllResults(),
-        'totalSD'     => $model->where('jenjang','SD')->countAllResults(),
-        'totalSMP'    => $model->where('jenjang','SMP')->countAllResults(),
+
+        'sekolah' => $model->findAll(),
+
+        'totalSekolah' => $model->countAll(),
+
+        'totalTK' => $model
+            ->where('jenjang', 'TK')
+            ->countAllResults(),
+
+        'totalSD' => $model
+            ->where('jenjang', 'SD')
+            ->countAllResults(),
+
+        'totalSMP' => $model
+            ->where('jenjang', 'SMP')
+            ->countAllResults(),
+
     ];
 
     return view('index', $data);
@@ -33,22 +80,28 @@ public function index()
 
         return view('landing/data_sekolah', [
 
-            'sekolah'       => $model->findAll(),
+            'sekolah' => $model->findAll(),
 
-            'totalSekolah'  => $model->countAll(),
+            'totalSekolah' => $model->countAll(),
 
-            'totalTK'       => $model->where('jenjang','TK')->countAllResults(),
+            'totalTK' => $model
+                ->where('jenjang', 'TK')
+                ->countAllResults(),
 
-            'totalSD'       => $model->where('jenjang','SD')->countAllResults(),
+            'totalSD' => $model
+                ->where('jenjang', 'SD')
+                ->countAllResults(),
 
-            'totalSMP'      => $model->where('jenjang','SMP')->countAllResults()
+            'totalSMP' => $model
+                ->where('jenjang', 'SMP')
+                ->countAllResults()
 
         ]);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | PETA SEMUA SEKOLAH
+    | PETA PUBLIK
     |--------------------------------------------------------------------------
     */
 
@@ -56,16 +109,16 @@ public function index()
     {
         $model = new SekolahModel();
 
-        return view('landing/detail_peta',[
+        return view('landing/detail_peta', [
 
-            'sekolah'=>$model->findAll()
+            'sekolah' => $model->findAll()
 
         ]);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | WEBSITE SEKOLAH
+    | DETAIL SEKOLAH
     |--------------------------------------------------------------------------
     */
 
@@ -75,19 +128,17 @@ public function index()
 
         $sekolah = $model->find($id);
 
-        if(!$sekolah){
+        if (!$sekolah) {
 
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-
         }
 
-        return view('public/detail_sekolah',[
+        return view('public/index', [
 
-            'title'=>$sekolah['nama_sekolah'],
+            'title' => $sekolah['nama_sekolah'],
 
-            'sekolah'=>$sekolah
+            'sekolah' => $sekolah
 
         ]);
     }
-
 }

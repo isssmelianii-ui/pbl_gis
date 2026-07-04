@@ -10,29 +10,60 @@ class Laporan extends BaseController
     {
         $model = new SekolahModel();
 
-        $sekolah = $model->findAll();
+        // FILTER
+        $jenjang   = $this->request->getGet('jenjang');
+        $kecamatan = $this->request->getGet('kecamatan');
 
-        $totalSekolah = $model->countAll();
+        // QUERY
+        $query = $model;
 
-        $totalTK = $model
-            ->where('jenjang', 'TK')
-            ->countAllResults();
+        // FILTER JENJANG
+        if($jenjang != '' && $jenjang != null){
 
-        $totalSD = $model
-            ->where('jenjang', 'SD')
-            ->countAllResults();
+            $query = $query->where('jenjang', $jenjang);
 
-        $totalSMP = $model
-            ->where('jenjang', 'SMP')
-            ->countAllResults();
+        }
+
+        // FILTER KECAMATAN
+        if($kecamatan != '' && $kecamatan != null){
+
+            $query = $query->where('kecamatan', $kecamatan);
+
+        }
+
+        // DATA SEKOLAH
+        $sekolah = $query->findAll();
+
+        // TOTAL
+        $totalSekolah = count($sekolah);
+
+        $totalTK = count(array_filter($sekolah,function($s){
+
+            return $s['jenjang'] == 'TK';
+
+        }));
+
+        $totalSD = count(array_filter($sekolah,function($s){
+
+            return $s['jenjang'] == 'SD';
+
+        }));
+
+        $totalSMP = count(array_filter($sekolah,function($s){
+
+            return $s['jenjang'] == 'SMP';
+
+        }));
 
         return view('superadmin/laporan', [
 
-            'sekolah' => $sekolah,
+            'sekolah'       => $sekolah,
             'totalSekolah' => $totalSekolah,
-            'totalTK' => $totalTK,
-            'totalSD' => $totalSD,
-            'totalSMP' => $totalSMP
+            'totalTK'       => $totalTK,
+            'totalSD'       => $totalSD,
+            'totalSMP'      => $totalSMP,
+            'jenjang'       => $jenjang,
+            'kecamatan'     => $kecamatan
 
         ]);
     }

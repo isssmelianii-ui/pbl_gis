@@ -152,10 +152,27 @@
         font-size:13px;
         font-weight:600;
         transition:0.3s;
+        border:none;
+        cursor:pointer;
     }
 
     .detail-btn:hover{
         background:#1d4ed8;
+    }
+
+    .delete-btn{
+        background:#ef4444;
+        color:white;
+        padding:10px 16px;
+        border-radius:12px;
+        text-decoration:none;
+        font-size:13px;
+        font-weight:600;
+        transition:0.3s;
+    }
+
+    .delete-btn:hover{
+        background:#dc2626;
     }
 
     .website-link{
@@ -188,66 +205,95 @@
 
     <!-- FILTER -->
 
-    <div class="top-filter">
+    <form method="GET" class="top-filter">
+
+        <!-- SEARCH -->
 
         <div class="search-box">
 
             🔍
 
             <input type="text"
-            placeholder="Cari sekolah...">
+            name="keyword"
+            placeholder="Cari sekolah..."
+            value="<?= $keyword ?? ''; ?>">
 
         </div>
 
         <!-- KECAMATAN -->
 
-        <select class="filter-select">
+        <select name="kecamatan"
+        class="filter-select">
 
-            <option>
+            <option value="">
                 Semua Kecamatan
             </option>
 
-            <option>
+            <option value="Lintau Buo"
+            <?= ($kecamatan == 'Lintau Buo') ? 'selected' : ''; ?>>
+
                 Lintau Buo
+
             </option>
 
-            <option>
-                Lintau Buo Utara
-            </option>
+            <option value="Padang Ganting"
+            <?= ($kecamatan == 'Padang Ganting') ? 'selected' : ''; ?>>
 
-            <option>
                 Padang Ganting
+
             </option>
 
-            <option>
+            <option value="Tanjung Emas"
+            <?= ($kecamatan == 'Tanjung Emas') ? 'selected' : ''; ?>>
+
                 Tanjung Emas
+
             </option>
 
         </select>
 
         <!-- JENJANG -->
 
-        <select class="filter-select">
+        <select name="jenjang"
+        class="filter-select">
 
-            <option>
+            <option value="">
                 Semua Jenjang
             </option>
 
-            <option>
+            <option value="TK"
+            <?= ($jenjang == 'TK') ? 'selected' : ''; ?>>
+
                 TK
+
             </option>
 
-            <option>
+            <option value="SD"
+            <?= ($jenjang == 'SD') ? 'selected' : ''; ?>>
+
                 SD
+
             </option>
 
-            <option>
+            <option value="SMP"
+            <?= ($jenjang == 'SMP') ? 'selected' : ''; ?>>
+
                 SMP
+
             </option>
 
         </select>
 
-    </div>
+        <!-- BUTTON -->
+
+        <button type="submit"
+        class="detail-btn">
+
+            Terapkan
+
+        </button>
+
+    </form>
 
     <!-- TABLE -->
 
@@ -280,7 +326,7 @@
                     </th>
 
                     <th>
-                        Detail
+                        Aksi
                     </th>
 
                 </tr>
@@ -348,12 +394,24 @@
 
                         </td>
 
-                        <td>
+                        <td style="display:flex; gap:10px;">
+
+                            <!-- DETAIL -->
 
                             <a href="<?= base_url('/superadmin/detail-sekolah/'.$s['id']); ?>"
                             class="detail-btn">
 
                                 Detail
+
+                            </a>
+
+                            <!-- HAPUS -->
+
+                            <a href="<?= base_url('/superadmin/hapus-sekolah/'.$s['id']); ?>"
+                            onclick="return confirm('Yakin ingin menghapus data sekolah ini?')"
+                            class="delete-btn">
+
+                                Hapus
 
                             </a>
 

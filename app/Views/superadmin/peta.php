@@ -39,8 +39,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         gap:14px;
     }
 
-    /* LEFT */
-
     .left-control{
         display:flex;
         align-items:center;
@@ -73,24 +71,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         font-size:14px;
         color:#0f172a;
     }
-
-    .filter-btn{
-        background:rgba(255,255,255,0.96);
-        backdrop-filter:blur(12px);
-        border:none;
-        padding:15px 18px;
-        border-radius:18px;
-        font-size:13px;
-        color:#334155;
-        display:flex;
-        align-items:center;
-        gap:10px;
-        cursor:pointer;
-        box-shadow:0 10px 25px rgba(0,0,0,0.10);
-        font-weight:500;
-    }
-
-    /* RIGHT */
 
     .right-control{
         display:flex;
@@ -131,15 +111,13 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         background:#1d4ed8;
     }
 
-    /* TITLE */
-
     .map-title{
         position:absolute;
         top:95px;
         left:50%;
         transform:translateX(-50%);
         z-index:999;
-        background:rgba(255,255,255,0.20);
+        background:rgba(37,99,235,0.85);
         backdrop-filter:blur(12px);
         color:white;
         padding:12px 24px;
@@ -149,14 +127,10 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         box-shadow:0 10px 25px rgba(0,0,0,0.15);
     }
 
-    /* MAP */
-
     #map{
         width:100%;
         height:100%;
     }
-
-    /* LEGEND */
 
     .map-legend{
         position:absolute;
@@ -210,8 +184,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         background:#dc2626;
     }
 
-    /* POPUP */
-
     .popup-card{
         width:240px;
     }
@@ -247,18 +219,18 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
         color:#334155;
     }
 
-    .popup-btn{
-        display:block;
-        margin-top:15px;
-        background:#2563eb;
-        color:white;
-        text-align:center;
-        padding:12px;
-        border-radius:12px;
-        text-decoration:none;
-        font-size:13px;
-        font-weight:600;
-    }
+.popup-btn{
+    display:block;
+    margin-top:15px;
+    background:#2563eb;
+    color:#ffffff !important;
+    text-align:center;
+    padding:12px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+}
 
 </style>
 
@@ -270,8 +242,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
         <div class="top-control">
 
-            <!-- LEFT -->
-
             <div class="left-control">
 
                 <div class="search-box">
@@ -279,21 +249,19 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
                     <i class="fa-solid fa-magnifying-glass"></i>
 
                     <input type="text"
-                    placeholder="Cari nama sekolah atau koordinat...">
+                    id="searchSekolah"
+                    placeholder="Cari nama sekolah...">
 
                 </div>
 
-
-
             </div>
-
-            <!-- RIGHT -->
 
             <div class="right-control">
 
-                <!-- KECAMATAN -->
+                <!-- FILTER KECAMATAN -->
 
-                <select class="filter-select">
+                <select class="filter-select"
+                id="filterKecamatan">
 
                     <option value="">
                         Kecamatan: Semua
@@ -302,8 +270,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
                     <option value="Lintau Buo">
                         Kecamatan: Lintau Buo
                     </option>
-
-
 
                     <option value="Padang Ganting">
                         Kecamatan: Padang Ganting
@@ -315,9 +281,10 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
                 </select>
 
-                <!-- TINGKAT -->
+                <!-- FILTER JENJANG -->
 
-                <select class="filter-select">
+                <select class="filter-select"
+                id="filterJenjang">
 
                     <option value="">
                         Tingkat: Semua
@@ -339,7 +306,8 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
                 <!-- BUTTON -->
 
-                <button class="apply-btn">
+                <button class="apply-btn"
+                onclick="filterSekolah()">
 
                     Terapkan
 
@@ -380,9 +348,7 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
                 </div>
 
                 <span>
-
                     <?= $totalSD ?? 0; ?>
-
                 </span>
 
             </div>
@@ -398,9 +364,7 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
                 </div>
 
                 <span>
-
                     <?= $totalSMP ?? 0; ?>
-
                 </span>
 
             </div>
@@ -416,9 +380,7 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
                 </div>
 
                 <span>
-
                     <?= $totalTK ?? 0; ?>
-
                 </span>
 
             </div>
@@ -433,19 +395,25 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script>
 
+    // INIT MAP
+
     var map = L.map('map').setView(
-        [-0.471, 100.585],
-        12
+        [-0.947083, 100.417181],
+        8
     );
 
-    // SATELLITE MAP
+    // MAP STYLE
 
     L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
-            attribution:'Esri'
+            attribution:'© OpenStreetMap'
         }
     ).addTo(map);
+
+    // ARRAY MARKER
+
+    var semuaMarker = [];
 
     <?php foreach($sekolah as $s): ?>
 
@@ -477,16 +445,25 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
         });
 
-        L.marker([
+        var marker<?= $s['id']; ?> = L.marker([
             <?= $s['latitude']; ?>,
             <?= $s['longitude']; ?>
         ],{
             icon:icon<?= $s['id']; ?>
-        })
+        });
 
-        .addTo(map)
+        marker<?= $s['id']; ?>.nama =
+        "<?= strtolower($s['nama_sekolah']); ?>";
 
-        .bindPopup(`
+        marker<?= $s['id']; ?>.kecamatan =
+        "<?= $s['kecamatan']; ?>";
+
+        marker<?= $s['id']; ?>.jenjang =
+        "<?= $s['jenjang']; ?>";
+
+        marker<?= $s['id']; ?>.addTo(map);
+
+        marker<?= $s['id']; ?>.bindPopup(`
 
             <div class="popup-card">
 
@@ -525,8 +502,7 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
                 <?php if($s['website'] != '') : ?>
 
-                    <a href="<?= $s['website']; ?>"
-                    target="_blank"
+                    <a href="<?= base_url('public-website?id='.$s['id']); ?>"
                     class="popup-btn">
 
                         Website Sekolah
@@ -539,7 +515,70 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
         `);
 
+        semuaMarker.push(marker<?= $s['id']; ?>);
+
     <?php endforeach; ?>
+
+    // FILTER
+
+    function filterSekolah(){
+
+        var keyword =
+        document.getElementById('searchSekolah')
+        .value.toLowerCase();
+
+        var kecamatan =
+        document.getElementById('filterKecamatan')
+        .value;
+
+        var jenjang =
+        document.getElementById('filterJenjang')
+        .value;
+
+        semuaMarker.forEach(function(marker){
+
+            map.removeLayer(marker);
+
+            var cocok = true;
+
+            // SEARCH
+
+            if(
+                keyword != '' &&
+                !marker.nama.includes(keyword)
+            ){
+                cocok = false;
+            }
+
+            // FILTER KECAMATAN
+
+            if(
+                kecamatan != '' &&
+                marker.kecamatan != kecamatan
+            ){
+                cocok = false;
+            }
+
+            // FILTER JENJANG
+
+            if(
+                jenjang != '' &&
+                marker.jenjang != jenjang
+            ){
+                cocok = false;
+            }
+
+            // TAMPILKAN
+
+            if(cocok){
+
+                map.addLayer(marker);
+
+            }
+
+        });
+
+    }
 
 </script>
 

@@ -199,49 +199,82 @@
 
     <!-- FILTER -->
 
-    <div class="filter-box">
+    <form method="GET" class="filter-box">
 
-        <select class="filter-select">
+        <!-- FILTER JENJANG -->
 
-            <option>
+        <select name="jenjang"
+        class="filter-select">
+
+            <option value="">
                 Semua Tingkat
             </option>
 
-            <option>
+            <option value="TK"
+            <?= ($jenjang == 'TK') ? 'selected' : ''; ?>>
+
                 TK
+
             </option>
 
-            <option>
+            <option value="SD"
+            <?= ($jenjang == 'SD') ? 'selected' : ''; ?>>
+
                 SD
+
             </option>
 
-            <option>
+            <option value="SMP"
+            <?= ($jenjang == 'SMP') ? 'selected' : ''; ?>>
+
                 SMP
+
             </option>
 
         </select>
 
-        <select class="filter-select">
+        <!-- FILTER KECAMATAN -->
 
-            <option>
+        <select name="kecamatan"
+        class="filter-select">
+
+            <option value="">
                 Semua Kecamatan
             </option>
 
-            <option>
+            <option value="Lintau Buo"
+            <?= ($kecamatan == 'Lintau Buo') ? 'selected' : ''; ?>>
+
                 Lintau Buo
+
             </option>
 
-            <option>
+            <option value="Padang Ganting"
+            <?= ($kecamatan == 'Padang Ganting') ? 'selected' : ''; ?>>
+
                 Padang Ganting
+
             </option>
 
-            <option>
+            <option value="Tanjung Emas"
+            <?= ($kecamatan == 'Tanjung Emas') ? 'selected' : ''; ?>>
+
                 Tanjung Emas
+
             </option>
 
         </select>
 
-    </div>
+        <!-- BUTTON -->
+
+        <button type="submit"
+        class="print-btn">
+
+            Terapkan
+
+        </button>
+
+    </form>
 
     <!-- REPORT -->
 
@@ -381,37 +414,53 @@
 
             <tbody>
 
-                <?php foreach($sekolah as $s): ?>
+                <?php if(!empty($sekolah)) : ?>
 
-                <tr>
+                    <?php foreach($sekolah as $s): ?>
 
-                    <td>
+                    <tr>
 
-                        <?= $s['nama_sekolah']; ?>
+                        <td>
 
-                    </td>
+                            <?= $s['nama_sekolah']; ?>
 
-                    <td>
+                        </td>
 
-                        <?= $s['jenjang']; ?>
+                        <td>
 
-                    </td>
+                            <?= $s['jenjang']; ?>
 
-                    <td>
+                        </td>
 
-                        <?= $s['kecamatan']; ?>
+                        <td>
 
-                    </td>
+                            <?= $s['kecamatan']; ?>
 
-                    <td>
+                        </td>
 
-                        Aktif
+                        <td>
 
-                    </td>
+                            Aktif
 
-                </tr>
+                        </td>
 
-                <?php endforeach; ?>
+                    </tr>
+
+                    <?php endforeach; ?>
+
+                <?php else : ?>
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            Tidak ada data ditemukan.
+
+                        </td>
+
+                    </tr>
+
+                <?php endif; ?>
 
             </tbody>
 

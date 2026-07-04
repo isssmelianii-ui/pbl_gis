@@ -9,24 +9,29 @@ class PublicWebsite extends BaseController
     public function index()
     {
         $sekolahModel = new SekolahModel();
-        
-        // Ambil data sekolah berdasarkan user yang login
-        // atau berdasarkan session
-        $userId = session()->get('id');
-        
-        if ($userId) {
-            // Jika user login, ambil sekolah berdasarkan user_id
-            $sekolah = $sekolahModel->where('user_id', $userId)->first();
-        } else {
-            // Jika tidak login, ambil sekolah pertama (fallback)
+
+        // AMBIL ID DARI URL
+        $id = $this->request->getGet('id');
+
+        // JIKA ADA ID
+        if($id){
+
+            $sekolah = $sekolahModel->find($id);
+
+        }else{
+
+            // FALLBACK
             $sekolah = $sekolahModel->first();
+
         }
-        
-        // Jika belum ada data, buat array kosong
+
+        // JIKA DATA TIDAK ADA
         if (!$sekolah) {
+
             $sekolah = [
+
                 'id' => null,
-                'nama_sekolah' => 'Sekolah Anda',
+                'nama_sekolah' => 'Sekolah Tidak Ditemukan',
                 'npsn' => '',
                 'jenjang' => '',
                 'status_sekolah' => '',
@@ -34,27 +39,30 @@ class PublicWebsite extends BaseController
                 'kurikulum' => '',
                 'kecamatan' => '',
                 'alamat' => '',
-                'visi' => 'Belum diisi',
-                'misi' => 'Belum diisi',
+                'visi' => '',
+                'misi' => '',
                 'logo' => '',
                 'cover' => '',
                 'foto' => '',
-                'kepala_sekolah' => 'Belum diisi',
+                'kepala_sekolah' => '',
                 'nip_kepala' => '',
-                'sambutan' => 'Belum diisi',
+                'sambutan' => '',
                 'latitude' => '-0.947083',
                 'longitude' => '100.417181',
                 'telepon' => '',
                 'email' => '',
-                'website' => '',
-                'user_id' => $userId,
+                'website' => ''
+
             ];
+
         }
-        
+
         $data = [
-            'sekolah' => $sekolah,
+
+            'sekolah' => $sekolah
+
         ];
-        
+
         return view('public/index', $data);
     }
 }
