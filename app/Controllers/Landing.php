@@ -76,7 +76,7 @@ class Landing extends BaseController
     {
         switch ($role) {
             case 'super_admin':
-                return 'Super Administrator';
+                return 'DINAS PENDIDIKAN';
             case 'operator':
                 return 'Operator Sekolah';
             default:

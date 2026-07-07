@@ -6,6 +6,7 @@ use App\Models\SekolahModel;
 
 class DataSekolah extends BaseController
 {
+
     /*
     |--------------------------------------------------------------------------
     | DATA SEKOLAH

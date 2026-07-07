@@ -2,82 +2,180 @@
 
 <?= $this->include('layouts/sidebar'); ?>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
+
+    :root{
+        --navy-950:#0a1d33;
+        --navy-900:#0e2a47;
+        --navy-800:#153a5f;
+        --gold-500:#c08a28;
+        --gold-400:#d6a445;
+        --ink-900:#1c2733;
+        --ink-600:#54626f;
+        --ink-400:#8b97a3;
+        --line:#e3e8ee;
+        --surface:#ffffff;
+    }
 
     .main-content{
         margin-left:280px;
         padding:40px;
-        background:#f8fafc;
+        background:#f5f7fa;
         min-height:100vh;
+        font-family:'Plus Jakarta Sans',sans-serif;
+        color:var(--ink-900);
     }
 
     .form-card{
         width:100%;
-        max-width:760px;
-        background:white;
-        border-radius:28px;
-        padding:35px;
-        border:1px solid #e5e7eb;
-        box-shadow:0 15px 35px rgba(0,0,0,0.05);
+        max-width:720px;
+        background:var(--surface);
+        border-radius:22px;
+        padding:38px;
+        border:1px solid var(--line);
+        box-shadow:0 15px 40px rgba(14,42,71,0.06);
     }
 
     .page-title{
-        margin-bottom:35px;
+        margin-bottom:32px;
+        padding-bottom:24px;
+        border-bottom:1px solid var(--line);
+    }
+
+    .page-title .eyebrow{
+        font-family:'JetBrains Mono',monospace;
+        font-size:11.5px;
+        letter-spacing:1.2px;
+        text-transform:uppercase;
+        color:var(--gold-500);
+        margin-bottom:12px;
+        display:flex;
+        align-items:center;
+        gap:9px;
+    }
+
+    .page-title .eyebrow::before{
+        content:'';
+        width:20px;
+        height:1px;
+        background:var(--gold-500);
     }
 
     .page-title h1{
-        font-size:34px;
-        color:#0f172a;
+        font-size:28px;
+        font-weight:800;
+        color:var(--ink-900);
         margin-bottom:10px;
+        letter-spacing:-0.4px;
     }
 
     .page-title p{
-        color:#64748b;
+        color:var(--ink-600);
         font-size:14px;
-        line-height:1.7;
+        line-height:1.75;
+        max-width:520px;
     }
 
     .input-group{
-        margin-bottom:24px;
+        margin-bottom:22px;
     }
 
     .input-group label{
         display:block;
-        margin-bottom:10px;
-        font-size:14px;
-        font-weight:600;
-        color:#334155;
+        margin-bottom:9px;
+        font-size:13px;
+        font-weight:700;
+        color:var(--ink-900);
     }
 
-    .input-group input{
+    .field-box{
+        display:flex;
+        align-items:center;
+        gap:11px;
+        border:1.5px solid var(--line);
+        border-radius:12px;
+        background:#f8fafc;
+        padding:0 15px;
+        transition:border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .field-box:focus-within{
+        border-color:var(--navy-800);
+        background:white;
+        box-shadow:0 0 0 3.5px rgba(14,42,71,0.09);
+    }
+
+    .field-box i{
+        color:var(--ink-400);
+        font-size:14px;
+        flex-shrink:0;
+    }
+
+    .field-box input{
         width:100%;
-        padding:16px 18px;
-        border-radius:18px;
-        border:1px solid #dbe3ef;
+        padding:14px 0;
+        border:none;
         outline:none;
+        background:transparent;
         font-size:14px;
-        transition:0.3s;
+        font-family:inherit;
+        color:var(--ink-900);
     }
 
-    .input-group input:focus{
-        border-color:#2563eb;
-        box-shadow:0 0 0 4px rgba(37,99,235,0.10);
+    .field-box input::placeholder{
+        color:var(--ink-400);
+    }
+
+    .form-actions{
+        display:flex;
+        gap:12px;
+        margin-top:30px;
+        padding-top:24px;
+        border-top:1px solid var(--line);
     }
 
     .submit-btn{
-        background:#2563eb;
+        background:var(--navy-900);
         color:white;
         border:none;
-        padding:16px 26px;
-        border-radius:18px;
+        padding:14.5px 26px;
+        border-radius:12px;
         cursor:pointer;
         font-size:14px;
-        font-weight:600;
-        transition:0.3s;
+        font-weight:700;
+        font-family:inherit;
+        display:flex;
+        align-items:center;
+        gap:9px;
+        transition:background 0.15s ease;
     }
 
     .submit-btn:hover{
-        background:#1d4ed8;
+        background:var(--navy-800);
+    }
+
+    @media(max-width:600px){
+
+        .main-content{
+            padding:22px;
+        }
+
+        .form-card{
+            padding:26px;
+        }
+
+        .submit-btn{
+            width:100%;
+            justify-content:center;
+        }
+
     }
 
 </style>
@@ -87,6 +185,8 @@
     <div class="form-card">
 
         <div class="page-title">
+
+            <div class="eyebrow">Manajemen Akun</div>
 
             <h1>
                 Tambah Operator
@@ -109,10 +209,16 @@
                     Nama Operator
                 </label>
 
-                <input type="text"
-                name="name"
-                placeholder="Masukkan nama operator..."
-                required>
+                <div class="field-box">
+
+                    <i class="fa-regular fa-user"></i>
+
+                    <input type="text"
+                    name="name"
+                    placeholder="Masukkan nama operator..."
+                    required>
+
+                </div>
 
             </div>
 
@@ -124,10 +230,16 @@
                     Email Operator
                 </label>
 
-                <input type="email"
-                name="email"
-                placeholder="Masukkan email operator..."
-                required>
+                <div class="field-box">
+
+                    <i class="fa-regular fa-envelope"></i>
+
+                    <input type="email"
+                    name="email"
+                    placeholder="Masukkan email operator..."
+                    required>
+
+                </div>
 
             </div>
 
@@ -139,10 +251,16 @@
                     Username
                 </label>
 
-                <input type="text"
-                name="username"
-                placeholder="Masukkan username..."
-                required>
+                <div class="field-box">
+
+                    <i class="fa-solid fa-at"></i>
+
+                    <input type="text"
+                    name="username"
+                    placeholder="Masukkan username..."
+                    required>
+
+                </div>
 
             </div>
 
@@ -154,19 +272,30 @@
                     Password
                 </label>
 
-                <input type="password"
-                name="password"
-                placeholder="Masukkan password..."
-                required>
+                <div class="field-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                    name="password"
+                    placeholder="Masukkan password..."
+                    required>
+
+                </div>
 
             </div>
 
-            <button type="submit"
-            class="submit-btn">
+            <div class="form-actions">
 
-                Simpan Operator
+                <button type="submit"
+                class="submit-btn">
 
-            </button>
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Simpan Operator
+
+                </button>
+
+            </div>
 
         </form>
 

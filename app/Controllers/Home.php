@@ -13,60 +13,73 @@ class Home extends BaseController
     |--------------------------------------------------------------------------
     */
 
-public function index()
-{
-    $model = new SekolahModel();
+    public function index()
+    {
+        $model = new SekolahModel();
 
-    $keyword = $this->request->getGet('keyword');
+        $keyword = $this->request->getGet('keyword');
 
-    // JIKA ADA PENCARIAN
-    if ($keyword) {
+        // JIKA ADA PENCARIAN
+        if ($keyword) {
 
-        $sekolah = $model
+            $sekolah = $model
 
-            ->like('nama_sekolah', $keyword)
+                ->where('status_publish', 1)
 
-            ->orLike('kecamatan', $keyword)
+                ->groupStart()
 
-            ->first();
+                ->like('nama_sekolah', $keyword)
 
-        // JIKA DATA DITEMUKAN
-        if ($sekolah) {
+                ->orLike('kecamatan', $keyword)
 
-            return redirect()->to(
-                base_url('detail-sekolah/' . $sekolah['id'])
+                ->groupEnd()
+
+                ->first();
+
+            // JIKA DATA DITEMUKAN
+            if ($sekolah) {
+
+                return redirect()->to(
+                    base_url('detail-sekolah/' . $sekolah['id'])
+                );
+            }
+
+            // JIKA TIDAK DITEMUKAN
+            session()->setFlashdata(
+                'error',
+                'Sekolah tidak ditemukan'
             );
         }
 
-        // JIKA TIDAK DITEMUKAN
-        session()->setFlashdata(
-            'error',
-            'Sekolah tidak ditemukan'
-        );
+        $data = [
+
+            'sekolah' => $model
+                ->where('status_publish', 1)
+                ->findAll(),
+
+            'totalSekolah' => $model
+                ->where('status_publish', 1)
+                ->countAllResults(),
+
+            'totalTK' => $model
+                ->where('status_publish', 1)
+                ->where('jenjang', 'TK')
+                ->countAllResults(),
+
+            'totalSD' => $model
+                ->where('status_publish', 1)
+                ->where('jenjang', 'SD')
+                ->countAllResults(),
+
+            'totalSMP' => $model
+                ->where('status_publish', 1)
+                ->where('jenjang', 'SMP')
+                ->countAllResults(),
+
+        ];
+
+        return view('index', $data);
     }
-
-    $data = [
-
-        'sekolah' => $model->findAll(),
-
-        'totalSekolah' => $model->countAll(),
-
-        'totalTK' => $model
-            ->where('jenjang', 'TK')
-            ->countAllResults(),
-
-        'totalSD' => $model
-            ->where('jenjang', 'SD')
-            ->countAllResults(),
-
-        'totalSMP' => $model
-            ->where('jenjang', 'SMP')
-            ->countAllResults(),
-
-    ];
-
-    return view('index', $data);
-}
 
     /*
     |--------------------------------------------------------------------------
@@ -80,19 +93,26 @@ public function index()
 
         return view('landing/data_sekolah', [
 
-            'sekolah' => $model->findAll(),
+            'sekolah' => $model
+                ->where('status_publish', 1)
+                ->findAll(),
 
-            'totalSekolah' => $model->countAll(),
+            'totalSekolah' => $model
+                ->where('status_publish', 1)
+                ->countAllResults(),
 
             'totalTK' => $model
+                ->where('status_publish', 1)
                 ->where('jenjang', 'TK')
                 ->countAllResults(),
 
             'totalSD' => $model
+                ->where('status_publish', 1)
                 ->where('jenjang', 'SD')
                 ->countAllResults(),
 
             'totalSMP' => $model
+                ->where('status_publish', 1)
                 ->where('jenjang', 'SMP')
                 ->countAllResults()
 
@@ -111,7 +131,9 @@ public function index()
 
         return view('landing/detail_peta', [
 
-            'sekolah' => $model->findAll()
+            'sekolah' => $model
+                ->where('status_publish', 1)
+                ->findAll()
 
         ]);
     }
@@ -126,8 +148,13 @@ public function index()
     {
         $model = new SekolahModel();
 
-        $sekolah = $model->find($id);
+        $sekolah = $model
 
+            ->where('status_publish', 1)
+
+            ->find($id);
+
+        // JIKA DATA TIDAK ADA
         if (!$sekolah) {
 
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();

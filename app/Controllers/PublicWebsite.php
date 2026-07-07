@@ -14,22 +14,16 @@ class PublicWebsite extends BaseController
         $id = $this->request->getGet('id');
 
         // JIKA ADA ID
-        if($id){
-
+        if ($id) {
             $sekolah = $sekolahModel->find($id);
-
-        }else{
-
+        } else {
             // FALLBACK
             $sekolah = $sekolahModel->first();
-
         }
 
         // JIKA DATA TIDAK ADA
         if (!$sekolah) {
-
             $sekolah = [
-
                 'id' => null,
                 'nama_sekolah' => 'Sekolah Tidak Ditemukan',
                 'npsn' => '',
@@ -52,17 +46,43 @@ class PublicWebsite extends BaseController
                 'telepon' => '',
                 'email' => '',
                 'website' => ''
-
             ];
-
         }
 
-        $data = [
-
-            'sekolah' => $sekolah
-
-        ];
-
+        $data = ['sekolah' => $sekolah];
         return view('public/index', $data);
     }
+
+     // ================== TAMBAHKAN METHOD INI ==================
+  public function detail($id)
+{
+    $sekolahModel = new SekolahModel();
+    $sekolah = $sekolahModel->find($id);
+
+    if (!$sekolah) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
+
+    // ============================================
+    // AMBIL SEKOLAH TERDEKAT (maksimal 5)
+    // ============================================
+    $sekolahTerdekat = [];
+    if (!empty($sekolah['latitude']) && !empty($sekolah['longitude'])) {
+        $sekolahTerdekat = $sekolahModel->getNearbySchools(
+            $sekolah['latitude'],
+            $sekolah['longitude'],
+            5
+        );
+    }
+
+    // ============================================
+    // KIRIM KE VIEW
+    // ============================================
+    $data = [
+        'sekolah'          => $sekolah,
+        'sekolah_terdekat' => $sekolahTerdekat, // <-- INI PENTING!
+    ];
+
+    return view('public/index', $data);
+}
 }

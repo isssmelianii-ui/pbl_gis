@@ -17,13 +17,14 @@ class Admin extends BaseController
 
         // Hitung progress kelengkapan
         $items = [
-            'nama_sekolah' => $sekolah['nama_sekolah'] ?? null,
-            'visi'         => $sekolah['visi'] ?? null,
-            'misi'         => $sekolah['misi'] ?? null,
+            'nama_sekolah'   => $sekolah['nama_sekolah'] ?? null,
+            'visi'           => $sekolah['visi'] ?? null,
+            'misi'           => $sekolah['misi'] ?? null,
             'kepala_sekolah' => $sekolah['kepala_sekolah'] ?? null,
-            'alamat'       => $sekolah['alamat'] ?? null,
-            'koordinat'    => $sekolah['koordinat'] ?? null,
-        ];
+            'alamat'         => $sekolah['alamat'] ?? null,
+            'latitude'       => $sekolah['latitude'] ?? null,
+            'longitude'      => $sekolah['longitude'] ?? null,
+        ];  
 
         $totalItems = count($items);
         $filledItems = 0;
@@ -151,21 +152,29 @@ class Admin extends BaseController
     // ============================================
     // PROFIL SEKOLAH - TAMPIL
     // ============================================
-    public function profil()
-    {
-        $sekolahModel = new SekolahModel();
-        $userId = session()->get('id');
-        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+   // PROFIL SEKOLAH - TAMPIL
+public function profil()
+{
+    $sekolahModel = new SekolahModel();
+    $userId = session()->get('id');
+    $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        $data = [
-            'title'       => 'Edit Profil Sekolah',
-            'subtitle'    => 'Kelola identitas dan informasi sekolah',
-            'active_menu' => 'profil',
-            'sekolah'     => $sekolah ?: [],
-        ];
+    // Ambil kecamatan unik dari database
+    $kecamatanList = $sekolahModel->select('kecamatan')
+                                  ->distinct()
+                                  ->orderBy('kecamatan', 'ASC')
+                                  ->findAll();
 
-        return view('admin/profil', $data);
-    }
+    $data = [
+        'title'          => 'Edit Profil Sekolah',
+        'subtitle'       => 'Kelola identitas dan informasi sekolah',
+        'active_menu'    => 'profil',
+        'sekolah'        => $sekolah ?: [],
+        'kecamatanList'  => $kecamatanList,
+    ];
+
+    return view('admin/profil', $data);
+}
 
     // ============================================
     // VISI & MISI - UPDATE
@@ -291,7 +300,7 @@ class Admin extends BaseController
         $data = [
             'latitude'  => $latitude,
             'longitude' => $longitude,
-            'koordinat' => $latitude . ', ' . $longitude,
+            
         ];
 
         if ($sekolah) {
@@ -327,39 +336,39 @@ class Admin extends BaseController
     // ============================================
     // PREVIEW WEBSITE
     // ============================================
-    public function preview()
-    {
-        $sekolahModel = new SekolahModel();
-        $userId = session()->get('id');
-        $sekolah = $sekolahModel->where('user_id', $userId)->first();
+        public function preview()
+        {
+            $sekolahModel = new SekolahModel();
+            $userId = session()->get('id');
+            $sekolah = $sekolahModel->where('user_id', $userId)->first();
 
-        // Hitung progress untuk preview
-        $items = [
-            'nama_sekolah' => $sekolah['nama_sekolah'] ?? null,
-            'visi'         => $sekolah['visi'] ?? null,
-            'misi'         => $sekolah['misi'] ?? null,
-            'kepala_sekolah' => $sekolah['kepala_sekolah'] ?? null,
-            'alamat'       => $sekolah['alamat'] ?? null,
-            'koordinat'    => $sekolah['koordinat'] ?? null,
-        ];
+            // Hitung progress untuk preview
+            $items = [
+                'nama_sekolah' => $sekolah['nama_sekolah'] ?? null,
+                'visi'         => $sekolah['visi'] ?? null,
+                'misi'         => $sekolah['misi'] ?? null,
+                'kepala_sekolah' => $sekolah['kepala_sekolah'] ?? null,
+                'alamat'       => $sekolah['alamat'] ?? null,
+                'koordinat'    => $sekolah['koordinat'] ?? null,
+            ];
 
-        $totalItems = count($items);
-        $filledItems = 0;
-        foreach ($items as $item) {
-            if (!empty($item)) $filledItems++;
+            $totalItems = count($items);
+            $filledItems = 0;
+            foreach ($items as $item) {
+                if (!empty($item)) $filledItems++;
+            }
+            $progress = ($totalItems > 0) ? round(($filledItems / $totalItems) * 100) : 0;
+
+            $data = [
+                'title'       => 'Preview Website',
+                'subtitle'    => 'Lihat tampilan website sekolah Anda',
+                'active_menu' => 'preview',
+                'sekolah'     => $sekolah ?: [],
+                'progress'    => $progress,
+            ];
+
+            return view('admin/preview', $data);
         }
-        $progress = ($totalItems > 0) ? round(($filledItems / $totalItems) * 100) : 0;
-
-        $data = [
-            'title'       => 'Preview Website',
-            'subtitle'    => 'Lihat tampilan website sekolah Anda',
-            'active_menu' => 'preview',
-            'sekolah'     => $sekolah ?: [],
-            'progress'    => $progress,
-        ];
-
-        return view('admin/preview', $data);
-    }
 
     // ============================================
     // REDIRECT: DATA SEKOLAH -> PROFIL
@@ -387,4 +396,28 @@ class Admin extends BaseController
     {
         return redirect()->to('/admin/lokasi');
     }
+
+public function publish($id)
+{
+    $model = new \App\Models\SekolahModel();
+
+    $sekolah = $model->find($id);
+
+    if(!$sekolah){
+
+        return redirect()->back()
+        ->with('error', 'Data sekolah tidak ditemukan');
+
+    }
+
+    $model->update($id, [
+
+        'status_publish' => 1
+
+    ]);
+
+    return redirect()->to('/admin/dashboard')
+    ->with('success', 'Website berhasil dipublikasikan');
+
+}
 }

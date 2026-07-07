@@ -23,7 +23,7 @@
                 margin-bottom:8px;
             ">
 
-                Dashboard Super Admin
+                Dashboard Dinas Pendidikan
 
             </h1>
 
@@ -328,10 +328,6 @@
                             Update Terakhir
                         </th>
 
-                        <th style="padding:16px;">
-                            Aksi
-                        </th>
-
                     </tr>
 
                 </thead>
@@ -381,23 +377,6 @@
 
                                 </td>
 
-                                <td style="padding:16px;">
-
-                                    <button style="
-                                        background:#2563eb;
-                                        color:white;
-                                        border:none;
-                                        padding:10px 16px;
-                                        border-radius:10px;
-                                        cursor:pointer;
-                                    ">
-
-                                        Detail
-
-                                    </button>
-
-                                </td>
-
                             </tr>
 
                         <?php endforeach; ?>
@@ -406,7 +385,7 @@
 
                         <tr>
 
-                            <td colspan="5"
+                            <td colspan="4"
                             style="
                                 padding:30px;
                                 text-align:center;

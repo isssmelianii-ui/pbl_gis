@@ -27,6 +27,8 @@ $routes->get('detail-sekolah/(:num)', 'Home::detailSekolah/$1');
 
 $routes->get('/public-website', 'PublicWebsite::index');
 
+$routes->get('/public-website/detail/(:num)', 'PublicWebsite::detail/$1');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +137,9 @@ $routes->group('admin', function ($routes) {
 
     // PREVIEW WEBSITE
     $routes->get('preview', 'Admin::preview');
+
+    // PUBLISH WEBSITE
+    $routes->get('publish/(:num)', 'Admin::publish/$1');
 
 });
 

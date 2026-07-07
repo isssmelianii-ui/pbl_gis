@@ -45,7 +45,7 @@
         margin-bottom: 16px;
     }
 
-    .form-group label {
+    data .form-group label {
         display: block;
         margin-bottom: 6px;
         font-weight: 600;
@@ -186,6 +186,7 @@
             grid-template-columns: 1fr;
             gap: 16px;
         }
+
         .card-custom {
             padding: 20px 22px;
         }
@@ -195,12 +196,15 @@
         .upload-grid {
             grid-template-columns: 1fr 1fr;
         }
+
         .form-row {
             grid-template-columns: 1fr;
         }
+
         .card-custom {
             padding: 16px 18px;
         }
+
         .btn-save {
             width: 100%;
             justify-content: center;
@@ -211,6 +215,7 @@
         .upload-grid {
             grid-template-columns: 1fr;
         }
+
         .upload-grid .upload-item .preview-image,
         .upload-grid .upload-item .preview-placeholder {
             height: 100px;
@@ -232,15 +237,16 @@ PAGE HEADER
 <!-- ============================================
 FLASH MESSAGE
 ============================================ -->
-<?php if(session()->getFlashdata('success')) : ?>
+<?php if (session()->getFlashdata('success')): ?>
     <div class="alert-success">
         <i class="bi bi-check-circle-fill me-2"></i>
         <?= session()->getFlashdata('success'); ?>
     </div>
 <?php endif; ?>
 
-<?php if(session()->getFlashdata('error')) : ?>
-    <div class="alert-danger" style="background:#fee2e2;padding:15px 20px;border-radius:12px;color:#991b1b;margin-bottom:20px;border-left:4px solid #ef4444;">
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="alert-danger"
+        style="background:#fee2e2;padding:15px 20px;border-radius:12px;color:#991b1b;margin-bottom:20px;border-left:4px solid #ef4444;">
         <i class="bi bi-exclamation-circle-fill me-2"></i>
         <?= session()->getFlashdata('error'); ?>
     </div>
@@ -261,16 +267,15 @@ FORM
 
             <div class="form-group">
                 <label>Nama Sekolah <span class="required">*</span></label>
-                <input type="text" name="nama_sekolah" class="form-control-custom" 
-                       value="<?= old('nama_sekolah', $sekolah['nama_sekolah'] ?? '') ?>" 
-                       placeholder="Masukkan nama sekolah">
+                <input type="text" name="nama_sekolah" class="form-control-custom"
+                    value="<?= old('nama_sekolah', $sekolah['nama_sekolah'] ?? '') ?>"
+                    placeholder="Masukkan nama sekolah">
             </div>
 
             <div class="form-group">
                 <label>NPSN</label>
-                <input type="text" name="npsn" class="form-control-custom" 
-                       value="<?= old('npsn', $sekolah['npsn'] ?? '') ?>" 
-                       placeholder="Masukkan NPSN">
+                <input type="text" name="npsn" class="form-control-custom"
+                    value="<?= old('npsn', $sekolah['npsn'] ?? '') ?>" placeholder="Masukkan NPSN">
             </div>
 
             <div class="form-row">
@@ -281,44 +286,49 @@ FORM
                         <option value="TK" <?= ($sekolah['jenjang'] ?? '') == 'TK' ? 'selected' : '' ?>>TK</option>
                         <option value="SD" <?= ($sekolah['jenjang'] ?? '') == 'SD' ? 'selected' : '' ?>>SD</option>
                         <option value="SMP" <?= ($sekolah['jenjang'] ?? '') == 'SMP' ? 'selected' : '' ?>>SMP</option>
-                        <option value="SMA" <?= ($sekolah['jenjang'] ?? '') == 'SMA' ? 'selected' : '' ?>>SMA</option>
-                        <option value="SMK" <?= ($sekolah['jenjang'] ?? '') == 'SMK' ? 'selected' : '' ?>>SMK</option>
-                    </select>
                 </div>
                 <div class="form-group">
                     <label>Status Sekolah</label>
-                    <input type="text" name="status_sekolah" class="form-control-custom" 
-                           value="<?= old('status_sekolah', $sekolah['status_sekolah'] ?? '') ?>" 
-                           placeholder="Contoh: Negeri / Swasta">
+                    <input type="text" name="status_sekolah" class="form-control-custom"
+                        value="<?= old('status_sekolah', $sekolah['status_sekolah'] ?? '') ?>"
+                        placeholder="Contoh: Negeri / Swasta">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Akreditasi</label>
-                    <input type="text" name="akreditasi" class="form-control-custom" 
-                           value="<?= old('akreditasi', $sekolah['akreditasi'] ?? '') ?>" 
-                           placeholder="Contoh: A / B / C">
+                    <input type="text" name="akreditasi" class="form-control-custom"
+                        value="<?= old('akreditasi', $sekolah['akreditasi'] ?? '') ?>" placeholder="Contoh: A / B / C">
                 </div>
                 <div class="form-group">
                     <label>Kurikulum</label>
-                    <input type="text" name="kurikulum" class="form-control-custom" 
-                           value="<?= old('kurikulum', $sekolah['kurikulum'] ?? '') ?>" 
-                           placeholder="Contoh: 2013 / Merdeka">
+                    <input type="text" name="kurikulum" class="form-control-custom"
+                        value="<?= old('kurikulum', $sekolah['kurikulum'] ?? '') ?>"
+                        placeholder="Contoh: 2013 / Merdeka">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Kecamatan</label>
-                <input type="text" name="kecamatan" class="form-control-custom" 
-                       value="<?= old('kecamatan', $sekolah['kecamatan'] ?? '') ?>" 
-                       placeholder="Masukkan kecamatan">
-            </div>
+    <label>Kecamatan</label>
+    <select name="kecamatan" class="form-control-custom">
+        <option value="">Pilih Kecamatan</option>
+        <?php
+        $kecamatanOptions = ['Tanjung Emas', 'Padang Ganting', 'Lintau Buo'];
+        $selectedKecamatan = old('kecamatan', $sekolah['kecamatan'] ?? '');
+        foreach ($kecamatanOptions as $kec) :
+        ?>
+            <option value="<?= $kec; ?>" <?= ($selectedKecamatan == $kec) ? 'selected' : ''; ?>>
+                <?= $kec; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
 
             <div class="form-group">
                 <label>Alamat</label>
-                <textarea name="alamat" class="form-control-custom" rows="4" 
-                          placeholder="Masukkan alamat lengkap"><?= old('alamat', $sekolah['alamat'] ?? '') ?></textarea>
+                <textarea name="alamat" class="form-control-custom" rows="4"
+                    placeholder="Masukkan alamat lengkap"><?= old('alamat', $sekolah['alamat'] ?? '') ?></textarea>
             </div>
         </div>
 
@@ -328,37 +338,32 @@ FORM
 
             <div class="form-group">
                 <label>Telepon</label>
-                <input type="text" name="telepon" class="form-control-custom" 
-                       value="<?= old('telepon', $sekolah['telepon'] ?? '') ?>" 
-                       placeholder="Masukkan nomor telepon">
+                <input type="text" name="telepon" class="form-control-custom"
+                    value="<?= old('telepon', $sekolah['telepon'] ?? '') ?>" placeholder="Masukkan nomor telepon">
             </div>
 
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control-custom" 
-                       value="<?= old('email', $sekolah['email'] ?? '') ?>" 
-                       placeholder="Masukkan email sekolah">
+                <input type="email" name="email" class="form-control-custom"
+                    value="<?= old('email', $sekolah['email'] ?? '') ?>" placeholder="Masukkan email sekolah">
             </div>
 
             <div class="form-group">
                 <label>Website</label>
-                <input type="text" name="website" class="form-control-custom" 
-                       value="<?= old('website', $sekolah['website'] ?? '') ?>" 
-                       placeholder="Masukkan website sekolah">
+                <input type="text" name="website" class="form-control-custom"
+                    value="<?= old('website', $sekolah['website'] ?? '') ?>" placeholder="Masukkan website sekolah">
             </div>
 
             <div class="form-group">
                 <label>Latitude</label>
-                <input type="text" name="latitude" class="form-control-custom" 
-                       value="<?= old('latitude', $sekolah['latitude'] ?? '') ?>" 
-                       placeholder="Contoh: -6.123456">
+                <input type="text" name="latitude" class="form-control-custom"
+                    value="<?= old('latitude', $sekolah['latitude'] ?? '') ?>" placeholder="Contoh: -6.123456">
             </div>
 
             <div class="form-group">
                 <label>Longitude</label>
-                <input type="text" name="longitude" class="form-control-custom" 
-                       value="<?= old('longitude', $sekolah['longitude'] ?? '') ?>" 
-                       placeholder="Contoh: 106.123456">
+                <input type="text" name="longitude" class="form-control-custom"
+                    value="<?= old('longitude', $sekolah['longitude'] ?? '') ?>" placeholder="Contoh: 106.123456">
             </div>
         </div>
     </div>
@@ -373,9 +378,9 @@ FORM
             <div class="upload-item">
                 <label>Cover Sekolah</label>
                 <input type="file" name="cover" accept="image/*">
-                <?php if(!empty($sekolah['cover'])) : ?>
-                    <img src="<?= base_url('uploads/cover/'.$sekolah['cover']); ?>" class="preview-image" alt="Cover">
-                <?php else : ?>
+                <?php if (!empty($sekolah['cover'])): ?>
+                    <img src="<?= base_url('uploads/cover/' . $sekolah['cover']); ?>" class="preview-image" alt="Cover">
+                <?php else: ?>
                     <div class="preview-placeholder">
                         <span><i class="bi bi-image me-1"></i> Belum ada cover</span>
                     </div>
@@ -385,9 +390,9 @@ FORM
             <div class="upload-item">
                 <label>Logo Sekolah</label>
                 <input type="file" name="logo" accept="image/*">
-                <?php if(!empty($sekolah['logo'])) : ?>
-                    <img src="<?= base_url('uploads/logo/'.$sekolah['logo']); ?>" class="preview-image" alt="Logo">
-                <?php else : ?>
+                <?php if (!empty($sekolah['logo'])): ?>
+                    <img src="<?= base_url('uploads/logo/' . $sekolah['logo']); ?>" class="preview-image" alt="Logo">
+                <?php else: ?>
                     <div class="preview-placeholder">
                         <span><i class="bi bi-image me-1"></i> Belum ada logo</span>
                     </div>
@@ -397,9 +402,9 @@ FORM
             <div class="upload-item">
                 <label>Foto Sekolah</label>
                 <input type="file" name="foto" accept="image/*">
-                <?php if(!empty($sekolah['foto'])) : ?>
-                    <img src="<?= base_url('uploads/sekolah/'.$sekolah['foto']); ?>" class="preview-image" alt="Foto">
-                <?php else : ?>
+                <?php if (!empty($sekolah['foto'])): ?>
+                    <img src="<?= base_url('uploads/sekolah/' . $sekolah['foto']); ?>" class="preview-image" alt="Foto">
+                <?php else: ?>
                     <div class="preview-placeholder">
                         <span><i class="bi bi-image me-1"></i> Belum ada foto</span>
                     </div>

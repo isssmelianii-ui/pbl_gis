@@ -21,27 +21,54 @@
     <link rel="stylesheet"
     href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+    <!-- FONTS -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
+
+        :root{
+            --navy-950:#0a1d33;
+            --navy-900:#0e2a47;
+            --navy-800:#153a5f;
+            --gold-500:#c08a28;
+            --gold-400:#d6a445;
+            --ink-900:#1c2733;
+            --ink-600:#54626f;
+            --ink-400:#8b97a3;
+            --line:#e3e8ee;
+            --bg:#f5f7fa;
+            --surface:#ffffff;
+            --danger-bg:#fdecec;
+            --danger-fg:#b3261e;
+        }
 
         *{
             margin:0;
             padding:0;
             box-sizing:border-box;
-            font-family:'Segoe UI', sans-serif;
+            font-family:'Plus Jakarta Sans', sans-serif;
             scroll-behavior:smooth;
         }
 
         body{
-            background:#f8fafc;
-            color:#0f172a;
+            background:var(--bg);
+            color:var(--ink-900);
         }
 
         a{
             text-decoration:none;
         }
 
+        .mono{
+            font-family:'JetBrains Mono', monospace;
+        }
+
         .container{
             width:88%;
+            max-width:1240px;
             margin:auto;
         }
 
@@ -52,9 +79,9 @@
             position:fixed;
             top:0;
             z-index:999;
-            background:rgba(255,255,255,0.95);
+            background:rgba(255,255,255,0.92);
             backdrop-filter:blur(10px);
-            border-bottom:1px solid #e5e7eb;
+            border-bottom:1px solid var(--line);
         }
 
         .nav-content{
@@ -65,50 +92,91 @@
         }
 
         .logo{
-            font-size:22px;
-            font-weight:700;
-            color:#2563eb;
+            font-size:19px;
+            font-weight:800;
+            color:var(--navy-900);
+            display:flex;
+            align-items:center;
+            gap:10px;
+            letter-spacing:-0.2px;
+        }
+
+        .logo .logo-mark{
+            width:34px;
+            height:34px;
+            border-radius:9px;
+            background:var(--navy-900);
+            color:var(--gold-400);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:14px;
+            flex-shrink:0;
         }
 
         .menu{
             display:flex;
-            gap:30px;
+            gap:32px;
             align-items:center;
         }
 
         .menu a{
-            color:#64748b;
-            font-size:14px;
-            font-weight:500;
+            color:var(--ink-600);
+            font-size:13.5px;
+            font-weight:600;
         }
 
         .menu a:hover{
-            color:#2563eb;
+            color:var(--navy-900);
         }
 
         .login-btn{
-            background:#2563eb;
+            background:var(--navy-900);
             color:white;
-            padding:11px 20px;
-            border-radius:12px;
+            padding:11px 22px;
+            border-radius:10px;
             font-size:13px;
-            font-weight:600;
+            font-weight:700;
+            transition:background 0.15s ease;
+        }
+
+        .login-btn:hover{
+            background:var(--navy-800);
         }
 
         /* HERO */
 
         .hero{
-            padding-top:130px;
+            padding-top:132px;
             padding-bottom:90px;
+            position:relative;
+            background:var(--navy-950);
+            color:#eaf0f6;
+            overflow:hidden;
+        }
+
+        .hero::before{
+            content:'';
+            position:absolute;
+            inset:0;
             background:
-            linear-gradient(
-                rgba(255,255,255,0.92),
-                rgba(255,255,255,0.92)
-            ),
-            url('https://www.transparenttextures.com/patterns/topography.png');
+                radial-gradient(circle at 85% 10%, rgba(214,164,69,0.10), transparent 45%),
+                linear-gradient(165deg,var(--navy-950) 0%,var(--navy-900) 60%,var(--navy-800) 100%);
+        }
+
+        .hero::after{
+            content:'';
+            position:absolute;
+            inset:0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+            background-size:56px 56px;
         }
 
         .hero-content{
+            position:relative;
+            z-index:2;
             display:flex;
             justify-content:space-between;
             align-items:center;
@@ -120,32 +188,46 @@
         }
 
         .hero-badge{
-            display:inline-block;
-            background:#dbeafe;
-            color:#2563eb;
-            padding:8px 18px;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            font-family:'JetBrains Mono', monospace;
+            background:rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.14);
+            color:var(--gold-400);
+            padding:8px 16px;
             border-radius:50px;
-            font-size:13px;
-            font-weight:600;
-            margin-bottom:22px;
+            font-size:11.5px;
+            letter-spacing:1px;
+            margin-bottom:24px;
+        }
+
+        .hero-badge::before{
+            content:'';
+            width:6px;
+            height:6px;
+            border-radius:50%;
+            background:var(--gold-400);
         }
 
         .hero-text h1{
-            font-size:48px;
-            line-height:1.2;
+            font-size:46px;
+            line-height:1.25;
+            font-weight:800;
             margin-bottom:18px;
+            letter-spacing:-0.5px;
         }
 
         .hero-text h1 span{
-            color:#2563eb;
+            color:var(--gold-400);
         }
 
-        .hero-text p{
-            color:#64748b;
-            line-height:1.9;
+        .hero-text > p{
+            color:#b7c4d1;
+            line-height:1.85;
             margin-bottom:30px;
             font-size:15px;
-            max-width:580px;
+            max-width:560px;
         }
 
         /* SEARCH */
@@ -153,14 +235,18 @@
         .search-box{
             width:100%;
             max-width:500px;
-            background:white;
-            border-radius:16px;
-            padding:10px;
+            background:var(--surface);
+            border-radius:14px;
+            padding:8px;
             display:flex;
             align-items:center;
             gap:10px;
-            border:1px solid #e5e7eb;
-            box-shadow:0 10px 25px rgba(0,0,0,0.05);
+            box-shadow:0 20px 45px rgba(0,0,0,0.25);
+        }
+
+        .search-box i{
+            color:var(--ink-400);
+            margin-left:10px;
         }
 
         .search-box input{
@@ -169,34 +255,25 @@
             outline:none;
             padding:10px;
             font-size:14px;
+            color:var(--ink-900);
+            font-family:inherit;
         }
 
         .search-btn{
-            background:#2563eb;
+            background:var(--navy-900);
             color:white;
             border:none;
-            padding:12px 20px;
-            border-radius:12px;
+            padding:12px 22px;
+            border-radius:10px;
             cursor:pointer;
-            font-weight:600;
+            font-weight:700;
+            font-size:13.5px;
+            font-family:inherit;
+            transition:background 0.15s ease;
         }
 
-        /* TAG */
-
-        .hero-tags{
-            display:flex;
-            gap:12px;
-            margin-top:18px;
-            flex-wrap:wrap;
-        }
-
-        .hero-tags span{
-            background:white;
-            padding:10px 16px;
-            border-radius:12px;
-            font-size:13px;
-            border:1px solid #e5e7eb;
-            color:#475569;
+        .search-btn:hover{
+            background:var(--navy-800);
         }
 
         /* HERO IMAGE */
@@ -205,6 +282,16 @@
             flex:1;
             display:flex;
             justify-content:center;
+            position:relative;
+        }
+
+        .hero-image::before{
+            content:'';
+            position:absolute;
+            inset:-16px;
+            border:1px solid rgba(214,164,69,0.35);
+            border-radius:32px;
+            pointer-events:none;
         }
 
         .hero-image img{
@@ -212,40 +299,46 @@
             max-width:470px;
             height:320px;
             object-fit:cover;
-            border-radius:28px;
-            box-shadow:0 25px 50px rgba(0,0,0,0.12);
+            border-radius:24px;
+            box-shadow:0 25px 55px rgba(0,0,0,0.35);
         }
 
         /* STATS */
 
         .stats{
+            position:relative;
+            z-index:2;
             margin-top:55px;
             display:grid;
             grid-template-columns:repeat(4,1fr);
-            gap:18px;
+            gap:16px;
         }
 
         .card{
-            background:white;
-            padding:24px;
-            border-radius:18px;
-            border:1px solid #edf1f7;
-            transition:0.3s;
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.12);
+            padding:22px 24px;
+            border-radius:16px;
+            transition:transform 0.2s ease, background 0.2s ease;
         }
 
         .card:hover{
-            transform:translateY(-5px);
+            transform:translateY(-4px);
+            background:rgba(255,255,255,0.08);
         }
 
         .card p{
-            font-size:13px;
-            color:#64748b;
+            font-size:12.5px;
+            color:#9fb0c0;
+            font-family:'JetBrains Mono', monospace;
+            letter-spacing:0.3px;
         }
 
         .card h2{
-            font-size:34px;
-            margin-top:12px;
-            color:#2563eb;
+            font-size:32px;
+            margin-top:10px;
+            color:#fff;
+            font-weight:800;
         }
 
         /* MAP */
@@ -257,141 +350,290 @@
         .section-title{
             display:flex;
             justify-content:space-between;
-            align-items:center;
+            align-items:flex-start;
             margin-bottom:35px;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .section-title .eyebrow{
+            font-family:'JetBrains Mono', monospace;
+            font-size:12px;
+            letter-spacing:1.2px;
+            text-transform:uppercase;
+            color:var(--gold-500);
+            margin-bottom:10px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .section-title .eyebrow::before{
+            content:'';
+            width:22px;
+            height:1px;
+            background:var(--gold-500);
         }
 
         .section-title h2{
-            font-size:34px;
+            font-size:32px;
+            margin-bottom:8px;
+            font-weight:800;
+            color:var(--ink-900);
+            letter-spacing:-0.3px;
         }
 
-        .section-title button{
-            background:#eff6ff;
-            color:#2563eb;
-            border:none;
-            padding:12px 18px;
-            border-radius:12px;
+        .section-title p{
+            color:var(--ink-600);
+            line-height:1.8;
+            font-size:14px;
+            max-width:600px;
+        }
+
+        .section-title .map-cta{
+            background:var(--surface);
+            border:1.5px solid var(--line);
+            color:var(--navy-900);
+            padding:12px 20px;
+            border-radius:10px;
+            font-size:13px;
+            font-weight:700;
             cursor:pointer;
+            white-space:nowrap;
+            transition:border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .section-title .map-cta:hover{
+            border-color:var(--navy-900);
+            background:#f8fafc;
+        }
+
+        .section-title .map-cta a{
+            color:inherit;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .map-layout{
+            display:grid;
+            grid-template-columns:250px 1fr;
+            gap:20px;
+            align-items:start;
+        }
+
+        .map-sidebar{
+            display:flex;
+            flex-direction:column;
+            gap:14px;
+        }
+
+        .info-card{
+            background:var(--surface);
+            border:1px solid var(--line);
+            border-radius:16px;
+            padding:18px;
+            display:flex;
+            gap:14px;
+            align-items:flex-start;
+        }
+
+        .info-icon{
+            width:38px;
+            height:38px;
+            background:var(--navy-900);
+            color:var(--gold-400);
+            border-radius:10px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-shrink:0;
+            font-size:13px;
+        }
+
+        .info-card h4{
+            font-size:13.5px;
+            margin-bottom:6px;
+            color:var(--ink-900);
+            font-weight:700;
+        }
+
+        .info-card p{
+            font-size:12px;
+            line-height:1.7;
+            color:var(--ink-600);
+        }
+
+        .map-filter{
+            background:var(--surface);
+            border:1px solid var(--line);
+            border-radius:16px;
+            padding:18px;
+            display:flex;
+            flex-direction:column;
+            gap:14px;
+        }
+
+        .map-filter .filter-label{
+            font-family:'JetBrains Mono', monospace;
+            font-size:11px;
+            letter-spacing:0.8px;
+            text-transform:uppercase;
+            color:var(--ink-400);
+            margin-bottom:2px;
+        }
+
+        .filter-item{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-size:13.5px;
+            color:var(--ink-900);
             font-weight:600;
         }
 
-        .map-wrapper{
-            background:white;
-            padding:18px;
-            border-radius:28px;
-            border:1px solid #e5e7eb;
-            display:grid;
-            grid-template-columns:260px 1fr;
-            gap:20px;
+        .filter-icon{
+            width:32px;
+            height:32px;
+            background:#f0f4f9;
+            color:var(--navy-900);
+            border-radius:50%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-size:12px;
+            flex-shrink:0;
         }
 
-        .map-info{
-            background:#f8fafc;
+        .map-box{
+            background:var(--surface);
             border-radius:20px;
-            padding:22px;
-        }
-
-        .map-info h3{
-            margin-bottom:14px;
-        }
-
-        .map-info p{
-            color:#64748b;
-            font-size:14px;
-            line-height:1.8;
-        }
-
-        .map-info ul{
-            margin-top:20px;
-            list-style:none;
-        }
-
-        .map-info li{
-            margin-bottom:12px;
-            font-size:14px;
-            color:#475569;
-        }
-
-        .map-info i{
-            color:#2563eb;
-            margin-right:8px;
+            overflow:hidden;
+            box-shadow:0 15px 35px rgba(15,23,42,0.06);
+            border:1px solid var(--line);
+            padding:12px;
         }
 
         #map{
-            height:500px;
-            border-radius:22px;
-            overflow:hidden;
+            width:100%;
+            height:520px;
+            border-radius:14px;
         }
 
         /* ABOUT */
 
         .info-section{
-            padding-bottom:90px;
+            padding-bottom:100px;
         }
 
         .info-grid{
             display:grid;
             grid-template-columns:1fr 1fr;
-            gap:40px;
+            gap:50px;
             align-items:center;
         }
 
-        .info-image img{
+        .info-image{
+            position:relative;
+        }
+
+        .info-image::before{
+            content:'';
+            position:absolute;
+            top:-14px;
+            left:-14px;
             width:100%;
-            border-radius:28px;
-            box-shadow:0 20px 45px rgba(0,0,0,0.08);
+            height:100%;
+            border:1.5px solid var(--line);
+            border-radius:24px;
+            z-index:0;
+        }
+
+        .info-image img{
+            position:relative;
+            z-index:1;
+            width:100%;
+            display:block;
+            border-radius:20px;
+            box-shadow:0 20px 45px rgba(15,23,42,0.10);
+        }
+
+        .info-text .eyebrow{
+            font-family:'JetBrains Mono', monospace;
+            font-size:12px;
+            letter-spacing:1.2px;
+            text-transform:uppercase;
+            color:var(--gold-500);
+            margin-bottom:14px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .info-text .eyebrow::before{
+            content:'';
+            width:22px;
+            height:1px;
+            background:var(--gold-500);
         }
 
         .info-text h2{
-            font-size:34px;
-            margin-bottom:20px;
+            font-size:30px;
+            margin-bottom:18px;
+            font-weight:800;
+            color:var(--ink-900);
+            letter-spacing:-0.3px;
         }
 
-        .info-text p{
-            color:#64748b;
+        .info-text > p{
+            color:var(--ink-600);
             line-height:1.9;
-            margin-bottom:25px;
+            margin-bottom:28px;
         }
 
         .info-list{
             display:flex;
             flex-direction:column;
-            gap:16px;
+            gap:18px;
         }
 
         .info-item{
             display:flex;
             align-items:flex-start;
-            gap:14px;
+            gap:16px;
         }
 
         .info-item i{
             width:42px;
             height:42px;
-            background:#dbeafe;
-            color:#2563eb;
+            background:var(--navy-900);
+            color:var(--gold-400);
             border-radius:12px;
             display:flex;
             justify-content:center;
             align-items:center;
             flex-shrink:0;
+            font-size:15px;
         }
 
         .info-item h4{
             margin-bottom:5px;
+            font-size:14.5px;
+            color:var(--ink-900);
         }
 
         .info-item p{
             margin:0;
-            font-size:14px;
+            font-size:13.5px;
+            color:var(--ink-600);
         }
 
         /* FOOTER */
 
         footer{
-            background:white;
-            border-top:1px solid #e5e7eb;
-            padding:45px 0;
+            background:var(--surface);
+            border-top:1px solid var(--line);
+            padding:40px 0;
         }
 
         .footer-content{
@@ -403,25 +645,31 @@
         }
 
         .footer-logo{
-            font-size:22px;
-            font-weight:700;
-            color:#2563eb;
+            font-size:18px;
+            font-weight:800;
+            color:var(--navy-900);
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .footer-logo .logo-mark{
+            width:32px;
+            height:32px;
+            border-radius:9px;
+            background:var(--navy-900);
+            color:var(--gold-400);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:13px;
         }
 
         .footer-text{
-            color:#64748b;
-            font-size:14px;
+            color:var(--ink-600);
+            font-size:13px;
             margin-top:10px;
-        }
-
-        .footer-links{
-            display:flex;
-            gap:25px;
-        }
-
-        .footer-links a{
-            color:#64748b;
-            font-size:14px;
+            font-family:'JetBrains Mono', monospace;
         }
 
         /* RESPONSIVE */
@@ -432,7 +680,7 @@
                 flex-direction:column;
             }
 
-            .map-wrapper{
+            .map-layout{
                 grid-template-columns:1fr;
             }
 
@@ -453,7 +701,7 @@
             }
 
             .hero-text h1{
-                font-size:34px;
+                font-size:32px;
             }
 
             .stats{
@@ -475,6 +723,7 @@
     <div class="container nav-content">
 
         <div class="logo">
+            <span class="logo-mark"><i class="fa-solid fa-map-location-dot"></i></span>
             GeoSchool GIS
         </div>
 
@@ -519,7 +768,7 @@
         <div class="hero-text">
 
             <div class="hero-badge">
-                SISTEM INFORMASI TANAH DATAR
+                SISTEM INFORMASI PETA GEOGRAFIS
             </div>
 
             <h1>
@@ -557,8 +806,9 @@
 
     <div style="
         margin-top:15px;
-        background:#fee2e2;
-        color:#dc2626;
+        background:#fdecec;
+        color:#b3261e;
+        border:1px solid rgba(179,38,30,0.2);
         padding:12px 16px;
         border-radius:12px;
         font-size:14px;
@@ -602,7 +852,7 @@
 
             <div class="card">
 
-                <p>Total SD</p>
+                <p>TOTAL SD</p>
 
                 <h2>
 
@@ -618,7 +868,7 @@
 
             <div class="card">
 
-                <p>Total SMP</p>
+                <p>TOTAL SMP</p>
 
                 <h2>
 
@@ -634,7 +884,7 @@
 
             <div class="card">
 
-                <p>Total TK</p>
+                <p>TOTAL TK</p>
 
                 <h2>
 
@@ -650,7 +900,7 @@
 
             <div class="card">
 
-                <p>Total Sekolah</p>
+                <p>TOTAL SEKOLAH</p>
 
                 <h2><?= count($sekolah); ?></h2>
 
@@ -666,281 +916,149 @@
 
 <section class="map-section" id="peta">
 
-```
-<div class="container">
+    <div class="container">
 
-    <div class="section-title">
+        <div class="section-title">
 
-        <div>
+            <div>
 
-            <h2>
-                Peta Persebaran Sekolah
-            </h2>
+                <div class="eyebrow">Peta Interaktif</div>
 
-            <p style="
-                color:#64748b;
-                margin-top:10px;
-                line-height:1.8;
-                font-size:14px;
-                max-width:600px;
-            ">
+                <h2>
+                    Peta Persebaran Sekolah
+                </h2>
 
-                Lihat distribusi lokasi sekolah negeri di seluruh kecamatan.
-                Gunakan filter untuk melihat kategori sekolah tertentu.
+                <p>
 
-            </p>
+                    Lihat distribusi lokasi sekolah negeri di seluruh kecamatan.
+                    Gunakan filter untuk melihat kategori sekolah tertentu.
+
+                </p>
+
+            </div>
+
+            <button class="map-cta">
+
+                <a href="<?= base_url('/detail-peta'); ?>">
+
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                    Lihat Peta Publik
+
+                </a>
+
+            </button>
 
         </div>
 
-        <button style="
-            background:white;
-            border:1px solid #dbe3ef;
-            color:#2563eb;
-            padding:12px 18px;
-            border-radius:12px;
-            font-size:13px;
-            font-weight:600;
-            cursor:pointer;
-        ">
+        <div class="map-layout">
 
-            <a href="<?= base_url('/detail-peta'); ?>">
+            <!-- SIDEBAR -->
 
-                Lihat Peta Publik
+            <div class="map-sidebar">
 
-            </a>
+                <div class="info-card">
 
-        </button>
+                    <div class="info-icon">
 
-    </div>
+                        <i class="fa-solid fa-circle-info"></i>
 
-    <div class="map-layout">
+                    </div>
 
-        <!-- SIDEBAR -->
+                    <div>
 
-        <div class="map-sidebar">
+                        <h4>
+                            Info Terkini
+                        </h4>
 
-            <div class="info-card">
+                        <p>
+                            Data diperbarui secara berkala berdasarkan
+                            Dapodik Pusat per Semester Ganjil 2025/2026.
+                        </p>
 
-                <div class="info-icon">
-
-                    <i class="fa-solid fa-circle-info"></i>
+                    </div>
 
                 </div>
 
-                <div>
+                <div class="info-card">
 
-                    <h4>
-                        Info Terkini
-                    </h4>
+                    <div class="info-icon">
 
-                    <p>
-                        Data diperbarui secara berkala berdasarkan
-                        Dapodik Pusat per Semester Ganjil 2025/2026.
-                    </p>
+                        <i class="fa-solid fa-map-location-dot"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            GIS Pendidikan
+                        </h4>
+
+                        <p>
+                            Visualisasi persebaran sekolah berbasis GIS
+                            untuk membantu masyarakat melihat lokasi sekolah.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="map-filter">
+
+                    <div class="filter-label">Kategori Sekolah</div>
+
+                    <div class="filter-item">
+
+                        <div class="filter-icon">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                        </div>
+
+                        TK
+
+                    </div>
+
+                    <div class="filter-item">
+
+                        <div class="filter-icon">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                        </div>
+
+                        SD
+
+                    </div>
+
+                    <div class="filter-item">
+
+                        <div class="filter-icon">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                        </div>
+
+                        SMP
+
+                    </div>
 
                 </div>
 
             </div>
 
-            <div class="info-card">
+            <!-- MAP -->
 
-                <div class="info-icon">
+            <div class="map-box">
 
-                    <i class="fa-solid fa-map-location-dot"></i>
-
-                </div>
-
-                <div>
-
-                    <h4>
-                        GIS Pendidikan
-                    </h4>
-
-                    <p>
-                        Visualisasi persebaran sekolah berbasis GIS
-                        untuk membantu masyarakat melihat lokasi sekolah.
-                    </p>
-
-                </div>
+                <div id="map"></div>
 
             </div>
-
-            <div class="map-filter">
-
-                <div class="filter-item">
-
-                    <div class="filter-icon">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                    </div>
-
-                    TK
-
-                </div>
-
-                <div class="filter-item">
-
-                    <div class="filter-icon">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                    </div>
-
-                    SD
-
-                </div>
-
-                <div class="filter-item">
-
-                    <div class="filter-icon">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                    </div>
-
-                    SMP
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- MAP -->
-
-        <div class="map-box">
-
-            <div id="map"></div>
 
         </div>
 
     </div>
-
-</div>
-```
 
 </section>
-
-<style>
-
-    .map-section{
-        padding:90px 0;
-    }
-
-    .section-title{
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-start;
-        margin-bottom:35px;
-        gap:20px;
-        flex-wrap:wrap;
-    }
-
-    .section-title h2{
-        font-size:34px;
-        margin-bottom:8px;
-    }
-
-    .map-layout{
-        display:grid;
-        grid-template-columns:240px 1fr;
-        gap:20px;
-        align-items:start;
-    }
-
-    .map-sidebar{
-        display:flex;
-        flex-direction:column;
-        gap:16px;
-    }
-
-    .info-card{
-        background:#f8fafc;
-        border:1px solid #dbe3ef;
-        border-radius:16px;
-        padding:18px;
-        display:flex;
-        gap:14px;
-        align-items:flex-start;
-    }
-
-    .info-icon{
-        width:40px;
-        height:40px;
-        background:#e0ecff;
-        color:#2563eb;
-        border-radius:12px;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-shrink:0;
-    }
-
-    .info-card h4{
-        font-size:14px;
-        margin-bottom:6px;
-    }
-
-    .info-card p{
-        font-size:12px;
-        line-height:1.7;
-        color:#64748b;
-    }
-
-    .map-filter{
-        display:flex;
-        flex-direction:column;
-        gap:14px;
-        margin-top:10px;
-    }
-
-    .filter-item{
-        display:flex;
-        align-items:center;
-        gap:14px;
-        font-size:14px;
-        color:#334155;
-        font-weight:500;
-    }
-
-    .filter-icon{
-        width:38px;
-        height:38px;
-        background:#eff6ff;
-        color:#2563eb;
-        border-radius:50%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        font-size:13px;
-    }
-
-    .map-box{
-        background:white;
-        border-radius:22px;
-        overflow:hidden;
-        box-shadow:0 10px 30px rgba(0,0,0,0.08);
-        border:1px solid #e5e7eb;
-        padding:14px;
-    }
-
-    #map{
-        width:100%;
-        height:520px;
-        border-radius:18px;
-    }
-
-    @media(max-width:900px){
-
-        .map-layout{
-            grid-template-columns:1fr;
-        }
-
-    }
-
-</style>
-
 
 <!-- ABOUT -->
 
@@ -956,6 +1074,8 @@ id="about">
         </div>
 
         <div class="info-text">
+
+            <div class="eyebrow">Tentang Sistem</div>
 
             <h2>
                 Data Persebaran Berdasarkan Wilayah Strategis
@@ -1038,6 +1158,7 @@ id="about">
         <div>
 
             <div class="footer-logo">
+                <span class="logo-mark"><i class="fa-solid fa-map-location-dot"></i></span>
                 GeoSchool GIS
             </div>
 
@@ -1115,8 +1236,9 @@ id="about">
             <div style="width:220px;">
 
                 <h3 style="
-                    color:#2563eb;
+                    color:#0e2a47;
                     margin-bottom:10px;
+                    font-family:'Plus Jakarta Sans',sans-serif;
                 ">
 
                     <?= $s['nama_sekolah']; ?>
@@ -1159,7 +1281,7 @@ id="about">
                     style="
                         display:block;
                         margin-top:12px;
-                        background:#2563eb;
+                        background:#0e2a47;
                         color:white;
                         text-align:center;
                         padding:10px;
