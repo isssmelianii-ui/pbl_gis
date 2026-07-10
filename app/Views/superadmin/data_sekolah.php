@@ -317,6 +317,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         font-size:13.5px;
     }
 
+    @media(max-width:992px){
+
+        .main-content{
+            margin-left:0;
+            padding:88px 20px 20px;
+        }
+
+    }
+
     @media(max-width:700px){
 
         .search-box, .filter-select{

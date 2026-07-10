@@ -2,29 +2,78 @@
 
 <?= $this->include('layouts/sidebar'); ?>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
+
+    :root{
+        --navy-950:#0a1d33;
+        --navy-900:#0e2a47;
+        --navy-800:#153a5f;
+        --gold-500:#c08a28;
+        --gold-400:#d6a445;
+        --ink-900:#1c2733;
+        --ink-600:#54626f;
+        --ink-400:#8b97a3;
+        --line:#e3e8ee;
+        --surface:#ffffff;
+        --green-500:#1a8a5f;
+    }
 
     .main-content{
         margin-left:280px;
-        padding:30px;
-        background:#f1f5f9;
+        padding:32px;
+        background:#f5f7fa;
         min-height:100vh;
+        font-family:'Plus Jakarta Sans',sans-serif;
+        color:var(--ink-900);
+    }
+
+    .main-content .mono{
+        font-family:'JetBrains Mono',monospace;
     }
 
     .page-title{
         text-align:center;
-        margin-bottom:30px;
+        margin-bottom:28px;
+    }
+
+    .page-title .eyebrow{
+        font-family:'JetBrains Mono',monospace;
+        font-size:11.5px;
+        letter-spacing:1.2px;
+        text-transform:uppercase;
+        color:var(--gold-500);
+        margin-bottom:10px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+    }
+
+    .page-title .eyebrow::before,
+    .page-title .eyebrow::after{
+        content:'';
+        width:20px;
+        height:1px;
+        background:var(--gold-500);
     }
 
     .page-title h1{
-        font-size:32px;
-        color:#0f172a;
+        font-size:28px;
+        font-weight:800;
+        color:var(--ink-900);
         margin-bottom:8px;
-        font-weight:700;
+        letter-spacing:-0.4px;
     }
 
     .page-title p{
-        color:#64748b;
+        color:var(--ink-600);
         font-size:14px;
     }
 
@@ -32,8 +81,8 @@
 
     .filter-box{
         display:flex;
-        gap:20px;
-        margin-bottom:25px;
+        gap:14px;
+        margin-bottom:24px;
         flex-wrap:wrap;
         max-width:950px;
         margin-left:auto;
@@ -42,20 +91,39 @@
 
     .filter-select{
         flex:1;
-        min-width:250px;
-        background:white;
-        border:1.5px solid #dbe3ef;
-        padding:16px;
-        border-radius:14px;
+        min-width:230px;
+        background:var(--surface);
+        border:1.5px solid var(--line);
+        padding:14px 16px;
+        border-radius:12px;
         outline:none;
-        font-size:14px;
-        color:#0f172a;
-        transition:border-color .2s ease, box-shadow .2s ease;
+        font-size:13.5px;
+        font-family:inherit;
+        color:var(--ink-900);
+        cursor:pointer;
+        transition:border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .filter-select:focus{
-        border-color:#1e3a8a;
-        box-shadow:0 0 0 4px rgba(30,58,138,0.1);
+        border-color:var(--navy-800);
+        box-shadow:0 0 0 3.5px rgba(14,42,71,0.09);
+    }
+
+    .apply-btn{
+        background:var(--navy-900);
+        color:white;
+        border:none;
+        padding:14px 24px;
+        border-radius:12px;
+        cursor:pointer;
+        font-size:13.5px;
+        font-weight:700;
+        font-family:inherit;
+        transition:background 0.15s ease;
+    }
+
+    .apply-btn:hover{
+        background:var(--navy-800);
     }
 
     /* REPORT */
@@ -63,75 +131,83 @@
     .report-card{
         max-width:950px;
         margin:auto;
-        background:white;
-        border-radius:24px;
-        padding:35px;
-        border:1px solid #e2e8f0;
-        box-shadow:0 10px 30px rgba(15,23,42,0.06);
-        position:relative;
-        overflow:hidden;
-    }
-
-    .report-card::before{
-        content:"";
-        position:absolute;
-        top:0;
-        left:0;
-        right:0;
-        height:6px;
-        background:linear-gradient(90deg,#0f172a,#1e3a8a,#2563eb);
+        background:var(--surface);
+        border-radius:20px;
+        padding:34px;
+        border:1px solid var(--line);
+        box-shadow:0 12px 30px rgba(14,42,71,0.06);
     }
 
     .report-header{
         display:flex;
         justify-content:space-between;
         align-items:flex-start;
-        margin-bottom:30px;
+        margin-bottom:26px;
+    }
+
+    .report-title{
+        display:flex;
+        align-items:center;
+        gap:14px;
+    }
+
+    .report-logo{
+        width:48px;
+        height:48px;
+        border-radius:13px;
+        background:var(--navy-900);
+        color:var(--gold-400);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:19px;
+        flex-shrink:0;
     }
 
     .report-title h2{
-        color:#1e3a8a;
-        font-size:28px;
-        margin-bottom:6px;
-        font-weight:700;
-        letter-spacing:.3px;
+        color:var(--navy-900);
+        font-size:22px;
+        margin-bottom:4px;
+        font-weight:800;
+        letter-spacing:-0.2px;
     }
 
     .report-title p{
         font-size:13px;
-        color:#64748b;
+        color:var(--ink-600);
     }
 
     .report-info{
         text-align:right;
-        font-size:13px;
-        color:#64748b;
-        line-height:1.6;
+        font-size:12.5px;
+        color:var(--ink-600);
+        font-family:'JetBrains Mono',monospace;
+        line-height:1.7;
     }
 
     .line{
         width:100%;
-        height:3px;
-        background:linear-gradient(90deg,#1e3a8a,#2563eb);
-        margin-bottom:30px;
+        height:2px;
+        background:var(--gold-500);
+        margin-bottom:28px;
         border-radius:10px;
     }
 
     .rekap-title{
         text-align:center;
-        margin-bottom:25px;
+        margin-bottom:24px;
     }
 
     .rekap-title h3{
-        font-size:24px;
-        margin-bottom:10px;
-        color:#0f172a;
-        font-weight:700;
+        font-size:21px;
+        margin-bottom:8px;
+        color:var(--ink-900);
+        font-weight:800;
     }
 
     .rekap-title p{
-        color:#64748b;
-        font-size:14px;
+        color:var(--ink-600);
+        font-size:13.5px;
     }
 
     /* STATS */
@@ -139,103 +215,112 @@
     .stats-grid{
         display:grid;
         grid-template-columns:repeat(4,1fr);
-        gap:16px;
-        margin-bottom:30px;
+        gap:14px;
+        margin-bottom:28px;
     }
 
     .stat-card{
         background:#f8fafc;
-        border:1px solid #e2e8f0;
-        border-radius:18px;
-        padding:20px;
-        transition:box-shadow .2s ease;
-    }
-
-    .stat-card:hover{
-        box-shadow:0 6px 16px rgba(15,23,42,0.06);
+        border:1px solid var(--line);
+        border-radius:16px;
+        padding:18px;
     }
 
     .stat-card h4{
-        font-size:13px;
-        color:#64748b;
-        margin-bottom:10px;
-        font-weight:600;
+        font-size:11.5px;
+        color:var(--ink-600);
+        margin-bottom:9px;
+        font-weight:700;
+        font-family:'JetBrains Mono',monospace;
+        text-transform:uppercase;
+        letter-spacing:0.4px;
     }
 
     .stat-card h2{
-        color:#1e3a8a;
-        font-size:30px;
-        font-weight:700;
+        color:var(--navy-900);
+        font-size:27px;
+        font-weight:800;
     }
 
     /* TABLE */
 
-    table{
+    .main-content table{
         width:100%;
         border-collapse:collapse;
-        margin-top:20px;
+        margin-top:18px;
     }
 
-    thead{
-        background:linear-gradient(135deg,#1e3a8a,#0f172a);
+    .main-content thead{
+        background:var(--navy-900);
         color:white;
     }
 
-    th{
-        padding:16px;
-        font-size:14px;
-        font-weight:600;
-        letter-spacing:.2px;
+    .main-content th{
+        padding:15px;
+        font-size:12.5px;
+        font-weight:700;
     }
 
-    td{
-        padding:16px;
+    .main-content td{
+        padding:15px;
         border-bottom:1px solid #f1f5f9;
         text-align:center;
-        font-size:14px;
-        color:#334155;
+        font-size:13.5px;
+        color:var(--ink-900);
     }
 
-    tbody tr:hover{
+    .main-content tbody tr:hover{
         background:#f8fafc;
+    }
+
+    .status-aktif{
+        color:var(--green-500);
+        font-weight:600;
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+    }
+
+    .status-aktif::before{
+        content:'';
+        width:6px;
+        height:6px;
+        border-radius:50%;
+        background:var(--green-500);
     }
 
     /* PRINT BUTTON */
 
     .print-box{
         text-align:right;
-        margin-top:25px;
+        margin-top:22px;
         max-width:950px;
         margin-left:auto;
         margin-right:auto;
     }
 
     .print-btn{
-        background:linear-gradient(135deg,#1e3a8a,#0f172a);
+        background:var(--navy-900);
         color:white;
         border:none;
-        padding:16px 24px;
-        border-radius:14px;
+        padding:14px 24px;
+        border-radius:12px;
         cursor:pointer;
-        font-size:14px;
-        font-weight:600;
-        letter-spacing:.2px;
-        transition:opacity .2s ease, transform .2s ease;
+        font-size:13.5px;
+        font-weight:700;
+        font-family:inherit;
+        display:inline-flex;
+        align-items:center;
+        gap:9px;
+        transition:background 0.15s ease;
     }
 
     .print-btn:hover{
-        opacity:0.92;
-        transform:translateY(-1px);
-    }
-
-    .print-btn:active{
-        transform:translateY(0);
+        background:var(--navy-800);
     }
 
     /* =========================
        PRINT AREA
-       (sembunyikan semua, tampilkan hanya report-card,
-       supaya header/sidebar apapun bentuknya tidak ikut tercetak)
     ========================= */
 
     @media print {
@@ -244,33 +329,34 @@
             background:white !important;
         }
 
-        /* Sembunyikan SEMUA elemen di body dulu */
-        body > *{
-            visibility:hidden !important;
+        /* Hilangkan sidebar dan elemen lain */
+        .sidebar,
+        .sidebar-admin,
+        .page-title,
+        .filter-box,
+        .print-box,
+        header,
+        nav,
+        footer{
+            display:none !important;
         }
 
-        /* Tampilkan ulang hanya report-card dan seluruh isinya */
-        .report-card,
-        .report-card *{
-            visibility:visible !important;
-        }
-
-        /* Lepaskan report-card dari layout asli & buat full halaman */
-        .report-card{
-            position:absolute !important;
-            top:0 !important;
-            left:0 !important;
+        /* Full halaman */
+        .main-content{
             margin:0 !important;
+            padding:0 !important;
             width:100% !important;
+            background:white !important;
+        }
+
+        /* Hanya cetak laporan */
+        .report-card{
             max-width:100% !important;
+            width:100% !important;
             border:none !important;
             box-shadow:none !important;
             border-radius:0 !important;
             padding:20px !important;
-        }
-
-        .report-card::before{
-            display:none !important;
         }
 
         /* Rapikan statistik */
@@ -289,10 +375,8 @@
         }
 
         th{
-            background:#1e3a8a !important;
+            background:#0e2a47 !important;
             color:white !important;
-            -webkit-print-color-adjust:exact;
-            print-color-adjust:exact;
         }
 
         @page{
@@ -300,11 +384,39 @@
         }
     }
 
+    @media(max-width:992px){
+
+        .main-content{
+            margin-left:0;
+            padding:88px 20px 20px;
+        }
+
+    }
+
+    @media(max-width:700px){
+
+        .report-header{
+            flex-direction:column;
+            gap:14px;
+        }
+
+        .report-info{
+            text-align:left;
+        }
+
+        .stats-grid{
+            grid-template-columns:repeat(2,1fr);
+        }
+
+    }
+
 </style>
 
 <div class="main-content">
 
     <div class="page-title">
+
+        <div class="eyebrow">Pelaporan Data</div>
 
         <h1>
             Pusat Laporan
@@ -372,7 +484,7 @@
 
         <!-- BUTTON -->
 
-        <button type="submit" class="print-btn">
+        <button type="submit" class="apply-btn">
             Terapkan
         </button>
 
@@ -386,13 +498,21 @@
 
             <div class="report-title">
 
-                <h2>
-                    DINAS PENDIDIKAN
-                </h2>
+                <div class="report-logo">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
 
-                <p>
-                    Sistem Informasi Geografis Sekolah
-                </p>
+                <div>
+
+                    <h2>
+                        DINAS PENDIDIKAN
+                    </h2>
+
+                    <p>
+                        Sistem Informasi Geografis Sekolah
+                    </p>
+
+                </div>
 
             </div>
 
@@ -518,7 +638,7 @@
                         </td>
 
                         <td>
-                            Aktif
+                            <span class="status-aktif">Aktif</span>
                         </td>
 
                     </tr>
@@ -549,6 +669,7 @@
 
         <button onclick="window.print()" class="print-btn">
 
+            <i class="fa-solid fa-print"></i>
             Cetak Laporan
 
         </button>

@@ -56,6 +56,13 @@
             box-sizing:border-box;
         }
 
+        /* Halaman ini punya sidebar/panel sendiri yang sudah responsif,
+           jadi tombol hamburger & overlay bawaan layouts/header tidak dipakai di sini */
+        .mobile-toggle,
+        .sidebar-overlay{
+            display:none !important;
+        }
+
         body{
             font-family:'Plus Jakarta Sans',sans-serif;
             background:#f5f7fa;

@@ -161,6 +161,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         background:var(--navy-800);
     }
 
+    @media(max-width:992px){
+
+        .main-content{
+            margin-left:0;
+            padding:88px 20px 20px;
+        }
+
+    }
+
     @media(max-width:600px){
 
         .main-content{

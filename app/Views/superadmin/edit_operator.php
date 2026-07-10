@@ -118,6 +118,36 @@
         transform:translateY(0);
     }
 
+    /* ================================
+       RESPONSIVE
+    ================================ */
+
+    @media(max-width:992px){
+
+        .main-content{
+            margin-left:0;
+            padding:88px 20px 20px;
+        }
+
+    }
+
+    @media(max-width:600px){
+
+        .main-content{
+            padding:80px 16px 16px;
+        }
+
+        .form-card{
+            padding:26px;
+        }
+
+        .submit-btn{
+            width:100%;
+            justify-content:center;
+        }
+
+    }
+
 </style>
 
 <div class="main-content">

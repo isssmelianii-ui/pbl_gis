@@ -87,12 +87,14 @@
             z-index:9998;
             opacity:0;
             visibility:hidden;
+            pointer-events:none;
             transition:opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .sidebar-overlay.active{
             opacity:1;
             visibility:visible;
+            pointer-events:auto;
         }
 
         /* RESPONSIVE */

@@ -144,6 +144,48 @@
             background:var(--navy-800);
         }
 
+        /* MOBILE NAV TOGGLE */
+
+        .nav-toggle{
+            display:none;
+            width:40px;
+            height:40px;
+            border:1.5px solid var(--line);
+            border-radius:10px;
+            background:var(--surface);
+            color:var(--navy-900);
+            font-size:16px;
+            cursor:pointer;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .mobile-menu{
+            display:none;
+            flex-direction:column;
+            gap:4px;
+            padding:14px 0 18px;
+            border-top:1px solid var(--line);
+        }
+
+        .mobile-menu.active{
+            display:flex;
+        }
+
+        .mobile-menu a{
+            color:var(--ink-600);
+            font-size:14px;
+            font-weight:600;
+            padding:12px 6px;
+            border-radius:10px;
+            transition:background 0.15s ease, color 0.15s ease;
+        }
+
+        .mobile-menu a:hover{
+            background:#f0f4f9;
+            color:var(--navy-900);
+        }
+
         /* HERO */
 
         .hero{
@@ -700,6 +742,10 @@
                 display:none;
             }
 
+            .nav-toggle{
+                display:flex;
+            }
+
             .hero-text h1{
                 font-size:32px;
             }
@@ -753,11 +799,42 @@
 
     </a>
 
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Buka menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
 </div>
+
+    <!-- MOBILE MENU -->
+
+    <div class="container">
+
+        <div class="mobile-menu" id="mobileMenu">
+
+            <a href="#home">Beranda</a>
+
+            <a href="#peta">Peta</a>
+
+            <a href="#about">Tentang</a>
+
+            <a href="<?= base_url('/data-sekolah'); ?>">Data Sekolah</a>
+
+        </div>
 
     </div>
 
 </div>
+
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if(navToggle && mobileMenu){
+        navToggle.addEventListener('click', function(){
+            mobileMenu.classList.toggle('active');
+        });
+    }
+</script>
 
 <!-- HERO -->
 
@@ -768,7 +845,7 @@
         <div class="hero-text">
 
             <div class="hero-badge">
-                SISTEM INFORMASI PETA GEOGRAFIS
+                SISTEM INFORMASI TANAH DATAR
             </div>
 
             <h1>

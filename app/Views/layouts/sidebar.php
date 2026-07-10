@@ -41,7 +41,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         position:fixed;
         top:0;
         left:0;
-        z-index:999;
+        z-index:10000;
         background:linear-gradient(
             180deg,
             var(--navy-950) 0%,
