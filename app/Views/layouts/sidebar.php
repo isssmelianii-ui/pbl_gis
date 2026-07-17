@@ -414,6 +414,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
                 </a>
 
             </li>
+            <li>
+                <a href="<?= base_url('/superadmin/pengaturan'); ?>"
+                class="<?= uri_string() == 'superadmin/pengaturan' ? 'active' : '' ?>">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    Pengaturan
+
+                </a>
+            </li>
 
         </ul>
 

@@ -91,6 +91,11 @@ $routes->group('superadmin', function ($routes) {
     // LAPORAN
     $routes->get('laporan', 'Laporan::index');
 
+    // PENGATURAN
+// PENGATURAN
+$routes->get('pengaturan', 'SuperAdmin::pengaturan');
+$routes->post('update-pengaturan', 'SuperAdmin::updatePengaturan');
+
 });
 
 
@@ -140,6 +145,10 @@ $routes->group('admin', function ($routes) {
 
     // PUBLISH WEBSITE
     $routes->get('publish/(:num)', 'Admin::publish/$1');
+
+    // PENGATURAN
+$routes->get('pengaturan', 'Admin::pengaturan');
+$routes->post('update-pengaturan', 'Admin::updatePengaturan');
 
 });
 

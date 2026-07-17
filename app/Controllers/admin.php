@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\SekolahModel;
+use App\Models\UserModel;
 
 class Admin extends BaseController
 {
@@ -396,6 +397,97 @@ public function profil()
     {
         return redirect()->to('/admin/lokasi');
     }
+
+    // ============================================
+// PENGATURAN AKUN
+// ============================================
+
+public function pengaturan()
+{
+    $userModel = new UserModel();
+
+    $user = $userModel->find(session()->get('id'));
+
+    $data = [
+        'title'       => 'Pengaturan Akun',
+        'subtitle'    => 'Kelola akun operator',
+        'active_menu' => 'pengaturan',
+        'user'        => $user
+    ];
+
+    return view('admin/pengaturan', $data);
+}
+
+public function updatePengaturan()
+{
+    $userModel = new UserModel();
+
+    $id = session()->get('id');
+
+    $name       = $this->request->getPost('name');
+    $email      = $this->request->getPost('email');
+    $password   = $this->request->getPost('password');
+    $konfirmasi = $this->request->getPost('konfirmasi');
+
+    // Cek email sudah dipakai atau belum
+    $cekEmail = $userModel
+        ->where('email', $email)
+        ->where('id !=', $id)
+        ->first();
+
+    if ($cekEmail) {
+
+        return redirect()->back()->with(
+            'error',
+            'Email sudah digunakan oleh akun lain.'
+        );
+
+    }
+
+    // Cek password
+    if (!empty($password)) {
+
+        if ($password != $konfirmasi) {
+
+            return redirect()->back()->with(
+                'error',
+                'Konfirmasi password tidak sama.'
+            );
+
+        }
+
+    }
+
+    $data = [
+
+        'name'  => $name,
+
+        'email' => $email
+
+    ];
+
+    if (!empty($password)) {
+
+        $data['password'] =
+            password_hash($password, PASSWORD_DEFAULT);
+
+    }
+
+    $userModel->update($id, $data);
+
+    session()->set([
+
+        'name'  => $name,
+
+        'email' => $email
+
+    ]);
+
+    return redirect()->back()->with(
+        'success',
+        'Pengaturan akun berhasil diperbarui.'
+    );
+}
 
 public function publish($id)
 {
