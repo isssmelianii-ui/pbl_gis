@@ -205,7 +205,7 @@
             cursor: pointer;
             padding: 4px;
         }
-        .voice-btn.listening { color: #ef4444; animation: pulse-voice 0.8s infinite alternate; }
+        .ce-btn.listening { color: #ef4444; animation: pulse-voice 0.8s infinite alternate; }
         @keyframes pulse-voice {
             0% { transform: scale(0.9); opacity: 0.7; }
             100% { transform: scale(1.2); opacity: 1; }
@@ -694,12 +694,13 @@
                 <h1>Geo<span>School</span></h1>
             </div>
             <div class="sidebar-actions">
-                <a href="<?= base_url('/'); ?>" class="btn-home" title="Kembali ke Beranda">
-                    <i class="fa-solid fa-house"></i> Beranda
-                </a>
+               
                 <button class="btn-close-sidebar" id="closeSidebarBtn">
                     <i class="fa-solid fa-xmark"></i> Tutup
                 </button>
+                <a href="<?= base_url('/'); ?>" class="btn-home" title="Kembali ke Beranda">
+                    <i class="fa-solid fa-house"></i> Beranda
+                </a>
             </div>
         </div>
 
@@ -716,6 +717,7 @@
         <div class="vehicle-selector">
             <button class="vehicle-btn active" data-vehicle="car"><i class="fa-solid fa-car"></i> Mobil</button>
             <button class="vehicle-btn" data-vehicle="motorcycle"><i class="fa-solid fa-motorcycle"></i> Motor</button>
+            <button class="vehicle-btn" data-vehicle="bicycle"><i class="fa-solid fa-bicycle"></i> Sepeda</button>
             <button class="vehicle-btn" data-vehicle="foot"><i class="fa-solid fa-person-walking"></i> Jalan</button>
         </div>
 
@@ -735,6 +737,7 @@
             <div class="filter-chip kecamatan-chip" data-kecamatan="Lintau Buo">Lintau Buo</div>
             <div class="filter-chip kecamatan-chip" data-kecamatan="Padang Ganting">Padang Ganting</div>
             <div class="filter-chip kecamatan-chip" data-kecamatan="Tanjung Emas">Tanjung Emas</div>
+            <div class="filter-chip kecamatan-chip" data-kecamatan="Lintau Buo Utara">Lintau Buo Utara</div>
         </div>
 
         <!-- School List -->

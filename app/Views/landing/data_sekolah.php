@@ -381,6 +381,7 @@
         <div class="logo">
             <span class="logo-mark"><i class="fa-solid fa-map-location-dot"></i></span>
             School GIS
+            
         </div>
 
         <a href="<?= base_url('/'); ?>"
@@ -404,7 +405,7 @@
             <div class="eyebrow">Data Satuan Pendidikan</div>
 
             <h1>
-                Direktori Sekolah
+                Direktori Sekolah ismel
             </h1>
 
             <p>
@@ -456,6 +457,23 @@
                 <h2><?= $totalSD; ?></h2>
 
                 <p>Sekolah Dasar (SD)</p>
+
+            </div>
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-book-open"></i>
+
+                    </div>
+
+                </div>
+
+                <h2><?= $totalSD; ?></h2>
+
+                <p>Sekolah </p>
 
             </div>
 

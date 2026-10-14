@@ -261,7 +261,7 @@
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>
-            <div class="loading-text">Memuat ruang kerja...</div>
+            <div class="loading-text">Memuat ruang kelompok 2...</div>
         </div>
     </div>
 

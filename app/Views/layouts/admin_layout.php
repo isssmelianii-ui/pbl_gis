@@ -577,6 +577,12 @@
                                 <i class="nav-icon bi bi-geo-alt"></i>
                                 <span class="nav-text">Lokasi</span>
                             </a>
+                            <li class="nav-item">
+                            <a href="<?= base_url('admin/fasilitas') ?>" 
+                               class="nav-link <?= ($active_menu ?? '') === 'fasilitas' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-geo-alt"></i>
+                                <span class="nav-text">Fasilitas</span>
+                            </a>
                         </li>
                     </ul>
                 </li>

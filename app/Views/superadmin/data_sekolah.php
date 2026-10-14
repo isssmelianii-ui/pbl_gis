@@ -463,6 +463,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
                     <th>
                         Kecamatan
                     </th>
+                    <th>
+                        Akreditasi
+                    </th>
 
                     <th>
                         Website
@@ -508,6 +511,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
                             <td>
 
                                 <?= $s['kecamatan']; ?>
+
+                            </td>
+                            <td>
+
+                                <?= $s['akreditasi']; ?>
 
                             </td>
 

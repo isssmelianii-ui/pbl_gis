@@ -525,7 +525,7 @@
         <div class="kicker">Akses Internal</div>
 
         <h2>
-            Login Admin
+            Login yuk
         </h2>
 
         <p class="sub">

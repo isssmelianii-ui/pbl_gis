@@ -160,12 +160,18 @@
 
 <div class="navbar" id="navbar">
     <div class="container nav-content">
+        
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Buka menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
         <div class="logo">
             <span class="logo-mark"><i class="fa-solid fa-map-location-dot"></i></span>
             GeoSchool GIS
         </div>
+        
         <div class="menu">
             <a href="#home">Beranda</a>
+            <a href="#home">lokasi</a>
             <a href="#peta">Peta</a>
             <a href="#about">Tentang</a>
             <a href="<?= base_url('/data-sekolah'); ?>">Data Sekolah</a>
@@ -178,6 +184,7 @@
     <div class="container">
         <div class="mobile-menu" id="mobileMenu">
             <a href="#home">Beranda</a>
+            <a href="#home">lokasi</a>
             <a href="#peta">Peta</a>
             <a href="#about">Tentang</a>
             <a href="<?= base_url('/data-sekolah'); ?>">Data Sekolah</a>
@@ -254,6 +261,11 @@
             <button class="map-cta">
                 <a href="<?= base_url('/detail-peta'); ?>">
                     <i class="fa-solid fa-up-right-from-square"></i> Lihat Peta Publik
+                </a>
+            </button>
+            <button class="map-cta">
+                <a href="<?= base_url('/detail-peta'); ?>">
+                    <i class="fa-solid fa-up-right-from-square"></i> Lihat Peta 
                 </a>
             </button>
         </div>
